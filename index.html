@@ -1,0 +1,674 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>新しい別荘づくり 家族アンケート</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho+B1:wght@400;600&family=Zen+Kaku+Gothic+New:wght@400;500;700&family=Barlow+Semi+Condensed:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ink:#1B2620;
+  --ink-2:#4B5A52;
+  --ink-3:#7C8880;
+  --paper:#E7EAE2;
+  --card:#F7F8F4;
+  --line:#C6CCC0;
+  --line-soft:#DDE1D8;
+  --water:#2C5A6E;
+  --larch:#9C6B31;
+  --frost:#8FA8B4;
+  --display:"Shippori Mincho B1",serif;
+  --body:"Zen Kaku Gothic New","Hiragino Kaku Gothic ProN","Yu Gothic",sans-serif;
+  --util:"Barlow Semi Condensed","Zen Kaku Gothic New",sans-serif;
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{
+  margin:0;
+  overflow-wrap:anywhere;
+  background:var(--paper);
+  color:var(--ink);
+  font-family:var(--body);
+  font-size:16px;
+  line-height:1.85;
+  padding-bottom:120px;
+}
+
+/* ---------- top bar ---------- */
+.bar{
+  position:sticky;top:0;z-index:50;
+  background:rgba(231,234,226,.94);
+  backdrop-filter:blur(8px);
+  border-bottom:1px solid var(--line);
+}
+.bar-in{
+  max-width:820px;margin:0 auto;padding:10px 22px;
+  display:flex;align-items:center;gap:16px;flex-wrap:wrap;
+}
+.gauge{flex:1;min-width:140px}
+.gauge-track{
+  height:6px;background:var(--line-soft);position:relative;overflow:hidden;
+  border-radius:1px;
+}
+.gauge-fill{
+  position:absolute;inset:0 auto 0 0;width:0%;
+  background:var(--water);transition:width .35s ease;
+}
+.gauge-ticks{
+  display:flex;justify-content:space-between;margin-top:5px;
+  font-family:var(--util);font-size:11px;letter-spacing:.1em;color:var(--ink-3);
+}
+.bar-btns{display:flex;gap:8px}
+button{font-family:var(--util);cursor:pointer;border-radius:2px}
+.btn{
+  border:1px solid var(--ink);background:transparent;color:var(--ink);
+  padding:7px 15px;font-size:13px;letter-spacing:.09em;font-weight:500;
+  transition:background .18s,color .18s;
+}
+.btn:hover{background:var(--ink);color:var(--paper)}
+.btn-key{background:var(--water);border-color:var(--water);color:#fff}
+.btn-key:hover{background:var(--ink);border-color:var(--ink)}
+.btn-lang{
+  border:1px solid var(--line);background:transparent;color:var(--ink-2);
+  padding:7px 12px;font-size:12px;letter-spacing:.1em;
+}
+.btn-lang:hover{border-color:var(--ink);color:var(--ink)}
+
+/* ---------- sheet ---------- */
+.sheet{max-width:820px;margin:0 auto;padding:0 22px}
+
+/* title block — 表題欄 */
+.titleblock{
+  border:1.5px solid var(--ink);
+  margin:44px 0 12px;
+  background:var(--card);
+}
+.tb-head{padding:26px 24px 20px;border-bottom:1px solid var(--ink)}
+.tb-eyebrow{
+  font-family:var(--util);font-size:12px;letter-spacing:.22em;
+  color:var(--water);text-transform:uppercase;margin:0 0 10px;
+}
+.tb-title{
+  font-family:var(--display);font-weight:600;
+  font-size:clamp(25px,5.2vw,38px);line-height:1.32;margin:0;
+  letter-spacing:.02em;
+}
+.tb-sub{
+  margin:12px 0 0;font-size:13.5px;color:var(--ink-2);line-height:1.8;
+}
+.tb-grid{display:grid;grid-template-columns:1fr 1fr}
+.tb-cell{padding:14px 24px;border-right:1px solid var(--line)}
+.tb-cell:last-child{border-right:none}
+.tb-cell label{
+  display:block;font-family:var(--util);font-size:11px;letter-spacing:.16em;
+  color:var(--ink-3);text-transform:uppercase;margin-bottom:4px;
+}
+.tb-cell input{
+  width:100%;border:none;border-bottom:1px solid var(--line);
+  background:transparent;font-family:var(--body);font-size:16px;
+  color:var(--ink);padding:3px 0;
+}
+.tb-cell input:focus{outline:none;border-bottom-color:var(--water)}
+
+.howto{
+  border-left:3px solid var(--larch);
+  padding:14px 0 14px 18px;margin:0 0 8px;
+  font-size:14px;color:var(--ink-2);line-height:1.9;
+}
+.howto b{color:var(--ink);font-weight:700}
+
+/* part */
+.part{margin:56px 0 0}
+.part-head{
+  display:flex;align-items:baseline;gap:14px;
+  border-bottom:1.5px solid var(--ink);padding-bottom:9px;margin-bottom:10px;
+}
+.part-no{
+  font-family:var(--util);font-size:13px;letter-spacing:.18em;
+  color:var(--water);font-weight:600;white-space:nowrap;
+}
+.part-name{
+  font-family:var(--display);font-size:21px;font-weight:600;margin:0;
+  letter-spacing:.02em;
+}
+.part-note{font-size:13px;color:var(--ink-3);margin:0 0 22px}
+
+/* question */
+.q{
+  background:var(--card);border:1px solid var(--line-soft);
+  padding:20px 22px;margin-bottom:14px;
+}
+.q:focus-within{border-color:var(--water)}
+.q-head{display:flex;gap:13px;align-items:baseline}
+.q-no{
+  font-family:var(--util);font-size:13px;font-weight:600;letter-spacing:.06em;
+  color:var(--water);white-space:nowrap;padding-top:2px;
+}
+.q-text{margin:0;font-size:16.5px;font-weight:500;line-height:1.7}
+.q-hint{
+  margin:6px 0 0 26px;font-size:13.5px;color:var(--ink-3);line-height:1.75;
+}
+textarea{
+  width:100%;margin-top:13px;min-height:78px;resize:vertical;overflow:hidden;
+  border:1px solid var(--line);border-radius:3px;background:#fff;
+  font-family:var(--body);font-size:15.5px;line-height:1.85;color:var(--ink);
+  padding:11px 13px;
+}
+textarea:focus{outline:none;border-color:var(--water);box-shadow:0 0 0 3px rgba(44,90,110,.11)}
+
+/* chips */
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px}
+.chip{position:relative;display:inline-flex}
+.chip input{position:absolute;opacity:0;width:0;height:0}
+.chip span{
+  display:block;border:1px solid var(--line);background:#fff;border-radius:16px;
+  padding:7px 15px;font-size:14px;line-height:1.5;color:var(--ink-2);
+  cursor:pointer;transition:border-color .15s,background .15s,color .15s;
+}
+.chip span:hover{border-color:var(--water);color:var(--ink)}
+.chip input:checked + span{
+  background:var(--water);border-color:var(--water);color:#fff;font-weight:500;
+}
+.chip input:focus-visible + span{outline:2px solid var(--larch);outline-offset:2px}
+.chips + textarea{margin-top:11px;min-height:56px}
+
+/* ranked rows */
+.rank{margin-top:14px;display:flex;flex-direction:column;gap:9px}
+.rank-row{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.rank-badge{
+  font-family:var(--util);font-size:12px;letter-spacing:.08em;font-weight:600;
+  width:34px;height:30px;display:flex;align-items:center;justify-content:center;
+  border:1px solid var(--water);color:var(--water);flex:none;border-radius:2px;
+}
+.rank-row input{
+  flex:1 1 180px;min-width:0;border:1px solid var(--line);border-radius:3px;
+  background:#fff;font-family:var(--body);font-size:15.5px;color:var(--ink);
+  padding:8px 11px;
+}
+.rank-row input.why{flex:1 1 150px}
+.rank-row input:focus{outline:none;border-color:var(--water);box-shadow:0 0 0 3px rgba(44,90,110,.11)}
+
+/* footer */
+.end{
+  margin:60px 0 0;border-top:1.5px solid var(--ink);padding-top:26px;
+  text-align:center;
+}
+.end p{font-size:14.5px;color:var(--ink-2);margin:0 0 20px}
+.end-btns{display:flex;gap:10px;justify-content:center;flex-wrap:wrap}
+.btn-lg{padding:12px 26px;font-size:14px}
+
+/* modal */
+.veil{
+  position:fixed;inset:0;background:rgba(27,38,32,.55);z-index:100;
+  display:none;align-items:center;justify-content:center;padding:20px;
+}
+.veil.on{display:flex}
+.modal{
+  background:var(--card);border:1.5px solid var(--ink);max-width:660px;width:100%;
+  max-height:86vh;display:flex;flex-direction:column;
+}
+.modal-head{
+  padding:18px 22px;border-bottom:1px solid var(--ink);
+  display:flex;justify-content:space-between;align-items:center;gap:12px;
+}
+.modal-head h2{font-family:var(--display);font-size:18px;margin:0;font-weight:600}
+.x{border:none;background:transparent;font-size:26px;line-height:1;color:var(--ink-2);padding:0 4px}
+.x:hover{color:var(--ink)}
+.modal-body{padding:18px 22px;overflow:auto}
+.modal-body textarea{
+  min-height:340px;font-size:13.5px;line-height:1.7;white-space:pre;
+  font-family:ui-monospace,"Zen Kaku Gothic New",monospace;overflow:auto;
+}
+.modal-foot{padding:15px 22px;border-top:1px solid var(--line);display:flex;gap:9px;flex-wrap:wrap}
+
+.toast{
+  position:fixed;left:50%;bottom:30px;transform:translate(-50%,16px);
+  background:var(--ink);color:var(--paper);padding:11px 22px;
+  font-family:var(--util);font-size:13.5px;letter-spacing:.07em;
+  opacity:0;pointer-events:none;transition:all .25s;z-index:200;border-radius:2px;
+}
+.toast.on{opacity:1;transform:translate(-50%,0)}
+
+@media (max-width:640px){
+  .tb-grid{grid-template-columns:1fr}
+  .tb-cell{border-right:none;border-bottom:1px solid var(--line)}
+  .tb-cell:last-child{border-bottom:none}
+  .q{padding:16px 14px}
+  .sheet{padding:0 12px}
+  .bar-in{padding:9px 12px;gap:10px}
+  .titleblock{margin-top:24px}
+  .tb-head{padding:20px 18px 16px}
+  .tb-cell{padding:12px 18px}
+  .part{margin-top:40px}
+  .part-head{flex-direction:column;align-items:flex-start;gap:3px}
+  .part-name{font-size:19px}
+  .q-text{font-size:16px}
+  .q-hint{margin-left:0}
+  /* iOS: inputs must be >=16px or Safari zooms in on focus */
+  textarea,.rank-row input,.tb-cell input{font-size:16px}
+  .chip span{font-size:15px;padding:8px 14px}
+  .rank-row input{flex:1 1 100%}
+  .btn{padding:9px 13px;font-size:13px}
+  .gauge{min-width:110px}
+  .modal-body textarea{font-size:14px;min-height:260px}
+  .modal{max-height:92vh}
+}
+@media (max-width:380px){
+  .bar-btns{gap:6px}
+  .btn{padding:8px 10px;letter-spacing:.04em}
+  .btn-lang{padding:8px 9px}
+}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+@media print{
+  .bar,.end-btns,.veil{display:none!important}
+  body{background:#fff;padding:0}
+  .q,.titleblock{break-inside:avoid;background:#fff}
+  textarea{min-height:64px;border-color:#999}
+}
+</style>
+</head>
+<body>
+
+<div class="bar">
+  <div class="bar-in">
+    <div class="gauge">
+      <div class="gauge-track"><div class="gauge-fill" id="fill"></div></div>
+      <div class="gauge-ticks"><span id="tickA">回答済み 0 / 48</span><span id="tickB">SHEET 1/1</span></div>
+    </div>
+    <div class="bar-btns">
+      <button class="btn-lang" id="lang">EN</button>
+      <button class="btn btn-key" id="export">書き出す</button>
+    </div>
+  </div>
+</div>
+
+<div class="sheet">
+
+  <div class="titleblock">
+    <div class="tb-head">
+      <p class="tb-eyebrow" id="eyebrow">Nagano · New House · Family Brief</p>
+      <h1 class="tb-title" id="mainTitle">新しい別荘づくり<br>家族アンケート</h1>
+      <p class="tb-sub" id="mainSub">設計をはじめる前に、家族それぞれの考えを集めるシートです。<br>ここに書かれたことは、まとめて建築家に渡します。</p>
+    </div>
+    <div class="tb-grid">
+      <div class="tb-cell">
+        <label id="lblName">記入者 / Name</label>
+        <input type="text" id="who" autocomplete="off">
+      </div>
+      <div class="tb-cell">
+        <label id="lblDate">記入日 / Date</label>
+        <input type="date" id="when">
+      </div>
+    </div>
+  </div>
+
+  <p class="howto" id="howto">
+    <b>他の人の答えを見る前に、自分の言葉で書いてください。</b><br>
+    正解はありません。短くても、長くても、思いつくままで大丈夫です。空欄のままの質問があっても構いません。予算のことは気にせず書いてください。<br>
+    書き終わったら、上の「書き出す」を押してテキストをコピーし、そのまま送ってください。
+  </p>
+
+  <noscript>
+    <div class="q"><p class="q-text">このシートは JavaScript が必要です。Safari や Chrome で開き直してください。</p></div>
+  </noscript>
+  <div id="form"></div>
+
+  <div class="end">
+    <p id="endNote">お疲れさまでした。「書き出す」でテキストにしてから送ってください。</p>
+    <div class="end-btns">
+      <button class="btn btn-key btn-lg" id="export2">書き出す</button>
+      <button class="btn btn-lg" id="print">印刷 / PDF</button>
+    </div>
+  </div>
+
+</div>
+
+<div class="veil" id="veil">
+  <div class="modal">
+    <div class="modal-head">
+      <h2 id="modalTitle">書き出したテキスト</h2>
+      <button class="x" id="close">&times;</button>
+    </div>
+    <div class="modal-body"><textarea id="out" readonly></textarea></div>
+    <div class="modal-foot">
+      <button class="btn btn-key" id="copy">コピーする</button>
+      <button class="btn" id="download">ファイルで保存</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+const UI = {
+  ja:{eyebrow:"Nagano · New House · Family Brief",
+    title:"新しい別荘づくり<br>家族アンケート",
+    sub:"設計をはじめる前に、家族それぞれの考えを集めるシートです。<br>ここに書かれたことは、まとめて建築家に渡します。",
+    name:"記入者 / Name", date:"記入日 / Date",
+    howto:"<b>他の人の答えを見る前に、自分の言葉で書いてください。</b><br>正解はありません。短くても、長くても、思いつくままで大丈夫です。空欄のままの質問があっても構いません。予算のことは気にせず書いてください。<br>書き終わったら、上の「書き出す」を押してテキストをコピーし、そのまま送ってください。",
+    exp:"書き出す", lang:"EN", print:"印刷 / PDF",
+    endNote:"お疲れさまでした。「書き出す」でテキストにしてから送ってください。",
+    modal:"書き出したテキスト", copy:"コピーする", dl:"ファイルで保存",
+    tick:n=>`回答済み ${n} / ${Q.length}`, copied:"コピーしました", saved:"保存しました",
+    unans:"未記入", filledBy:"記入者", filledOn:"記入日",
+    r1:"1位", r2:"2位", r3:"3位", why:"理由", phWhy:"理由（任意）", phItem:"内容",
+    phNote:"選んだ理由や補足があれば（任意）", picked:"選んだもの"},
+  en:{eyebrow:"Nagano · New House · Family Brief",
+    title:"Our New House<br>Family Questionnaire",
+    sub:"A sheet to gather what each of us thinks, before the design begins.<br>Everything written here will be shared with the architect.",
+    name:"Name / 記入者", date:"Date / 記入日",
+    howto:"<b>Write in your own words, before reading anyone else's answers.</b><br>There are no right answers. Short or long, whatever comes to mind. It's fine to leave questions blank. Don't worry about budget.<br>When you're done, press \"Export\" at the top, copy the text, and send it.",
+    exp:"Export", lang:"日本語", print:"Print / PDF",
+    endNote:"All done. Press \"Export\" to turn this into text, then send it.",
+    modal:"Your answers as text", copy:"Copy", dl:"Save as file",
+    tick:n=>`Answered ${n} / ${Q.length}`, copied:"Copied", saved:"Saved",
+    unans:"Not answered", filledBy:"Name", filledOn:"Date",
+    r1:"1st", r2:"2nd", r3:"3rd", why:"why", phWhy:"why (optional)", phItem:"what",
+    phNote:"Why, or anything to add (optional)", picked:"Picked"}
+};
+
+const PARTS = [
+ {no:"PART 1", ja:"今の別荘について", en:"The house we have now",
+  nja:"18年分の実感が、いちばん強い手がかりになります。",
+  nen:"Eighteen years of living there is the strongest clue we have."},
+ {no:"PART 2", ja:"この土地・この場所について", en:"The land and the setting",
+  nja:"建築家はまず敷地から設計を始めます。ここが最も役に立つ部分です。",
+  nen:"Architects design from the site first. This section matters most to them."},
+ {no:"PART 3", ja:"この家をどう使うか", en:"What this place is for",
+  nja:"広さも間取りも、まず「何をする場所か」から決まります。",
+  nen:"Size and layout both start from what the place is actually for."},
+ {no:"PART 4", ja:"新しい家の大きさ", en:"How big the house should be",
+  nja:"面積は予算に直結します。認識のズレを先に見つけておきます。",
+  nen:"Size drives cost. Better to surface disagreements early."},
+ {no:"PART 5", ja:"絶対に欲しいもの／優先順位", en:"Must-haves and priorities",
+  nja:"順位をつけることで、設計の判断ができるようになります。",
+  nen:"Ranking is what lets the architect make decisions."},
+ {no:"PART 6", ja:"暮らし方", en:"How we want to live",
+  nja:"間取りは「どう過ごすか」から決まります。",
+  nen:"Floor plans come from how you actually spend your days."},
+ {no:"PART 7", ja:"家の雰囲気・見た目", en:"Look and feel",
+  nja:"言葉より、選んで比べる方が正確に伝わります。迷ったら複数選んでOK。",
+  nen:"Choosing beats describing. Pick as many as you like."},
+ {no:"PART 8", ja:"これからのこと", en:"Looking ahead",
+  nja:"いつか住む家として、思うことを書いてください。",
+  nen:"Write what you think about eventually living here."}
+];
+
+const Q = [
+{p:0,ja:"今の別荘で、一番好きな場所・好きな瞬間はどこですか？　その理由も教えてください。",hja:"例：朝、リビングの窓から見える景色。あの光が好き",en:"What's your favourite place or moment in the house we have now? And why?",hen:"e.g. Morning light through the living room window"},
+{p:0,ja:"今の別荘で「ここが不便」「ここが嫌だ」と思うことは？",hja:"思いつくだけ全部。小さなことでもOKです",en:"What feels inconvenient or annoying about it?",hen:"List everything, however small"},
+{p:0,ja:"冬に困ったこと・寒いと感じた場所はありますか？",hja:"",en:"Anything that troubled you in winter, or places that felt cold?",hen:""},
+{p:0,ja:"夏に困ったこと・暑い／不便だと感じたことはありますか？",hja:"",en:"Anything that troubled you in summer — heat, damp, insects, anything?",hen:""},
+{p:0,ja:"「なくても困らなかったな」と思うものはありますか？",hja:"使っていない部屋、置き場所に困っているものなど",en:"Is there anything you could have done without?",hen:"Rooms you never use, things with nowhere to go"},
+{p:0,ja:"今の別荘の思い出で、新しい家にも引き継ぎたいものはありますか？",hja:"家具、雰囲気、習慣、景色、匂いなど、なんでも",en:"Anything from the old house you'd want to carry over?",hen:"Furniture, atmosphere, habits, views, even smells"},
+
+{p:1,ja:"このエリア（別荘地・周辺環境）で、好きなところは何ですか？",hja:"自然、景色、静けさ、空気、季節の変化、近所の人、周辺のお店や施設など",en:"What do you love about this area?",hen:"Nature, views, quiet, air, seasons, neighbours, nearby places"},
+{p:1,ja:"逆に、このエリアで不便だと感じること・気になることは？",hja:"買い物、道路、除雪、虫、湿気、音、電波・ネット、夜の暗さなど",en:"What's inconvenient or bothersome about the area?",hen:"Shops, roads, snow clearing, insects, damp, noise, signal, darkness"},
+{p:1,ja:"新しい土地（隣の土地）について、気づいていることはありますか？",hja:"日当たり、傾斜、木の位置、眺め、隣の家との距離、道路からの見え方、風の通り方など",en:"What have you noticed about the new plot next door?",hen:"Sun, slope, trees, views, distance to neighbours, how it looks from the road, wind"},
+{p:1,ja:"その土地から「絶対に見たい景色」はありますか？　どの部屋から見たいですか？",hja:"方向・時間帯・季節まで書けると、窓の設計に直結します",en:"Is there a view you absolutely want from the new house? From which room?",hen:"Direction, time of day and season all feed straight into window design"},
+{p:1,ja:"逆に「これは見えないようにしたい」「隠したい」ものはありますか？",hja:"隣家の視線、道路、電線、駐車場など",en:"Anything you'd rather not see, or want screened off?",hen:"Neighbours' windows, the road, power lines, parking"},
+{p:1,ja:"土地にある木や自然について、残したいもの・切ってもいいものはありますか？",hja:"",en:"Any trees or features on the land you want kept — or are happy to lose?",hen:""},
+{p:1,ja:"今の別荘との距離感・関係はどうしたいですか？",hja:"つなげたい、行き来しやすくしたい、あえて分けたい、今の別荘をどう使うか、など",en:"How should the new house relate to the old one?",hen:"Connected, easy to move between, deliberately separate — and what the old house becomes"},
+{p:1,ja:"冬のアクセス（雪・凍結・除雪・駐車）について、今困っていることや希望はありますか？",hja:"",en:"Anything about winter access — snow, ice, clearing, parking — that troubles you now?",hen:""},
+
+{p:2,ja:"あなたにとって、この家は「何をする場所」ですか？",hja:"休む／遊ぶ／働く／人が集まる／自然と過ごす／何かをつくる——いくつでも。優先順があれば書いてください",en:"What is this house for, to you?",hen:"Resting, playing, working, gathering, being in nature, making things — as many as apply"},
+{p:2,ja:"1年のうち、いつ・どのくらいの期間ここで過ごしたいですか？",hja:"季節、まとまった期間か短い滞在の繰り返しか、など",en:"When and how much of the year do you want to be here?",hen:"Which seasons; long stays or short repeated visits"},
+{p:2,ja:"夏と冬で、過ごし方はどう変わりますか？　それぞれ、ここで何をしていたいですか？",hja:"「夏も冬も住みやすい家」にするために、いちばん知りたい質問です",en:"How does summer differ from winter here? What do you want to be doing in each?",hen:"This is the key question for making the house work in both seasons"},
+{p:2,ja:"ここで仕事や勉強をしますか？　どんな環境が必要ですか？",hja:"リモートワーク、オンライン会議（時差・音）、集中して勉強する場所、必要な回線速度など",en:"Will you work or study here? What would you need?",hen:"Remote work, video calls (time zones, noise), somewhere to focus, internet speed"},
+{p:2,ja:"誰を招きたいですか？　どのくらいの頻度で、何人くらい、何泊くらい？",hja:"友達、親戚、祖父母、仕事関係——招きたい人と、招きたくない状況の両方",en:"Who do you want to invite? How often, how many, how long?",hen:"Friends, relatives, grandparents, work — and when you'd rather not host"},
+{p:2,ja:"この土地・この場所でやりたいことは何ですか？",hja:"焚き火、BBQ、雪遊び、家庭菜園、星を見る、ゴルフ、トレラン、スキー、音楽、読書——なんでも",en:"What do you want to do on this land, or from this base?",hen:"Fires, BBQ, snow, growing things, stargazing, golf, trail running, skiing, music, reading"},
+{p:2,ja:"そのために必要な「道具の置き場所」はありますか？",hja:"スキー、自転車、ゴルフ、登山靴、薪、アウトドア用品、濡れたもの、汚れたもの、車は何台",en:"What gear needs somewhere to live?",hen:"Skis, bikes, golf, boots, firewood, outdoor kit, wet things, muddy things, how many cars"},
+{p:2,ja:"「別荘として使う時期」と「ここに住む時期」で、使い方はどう変わると思いますか？",hja:"",en:"How would the way we use it change once we live here full time?",hen:""},
+
+{p:3,ja:"今の別荘と比べて、新しい家は「広い方がいい」「同じくらい」「小さくてもいい」のどれ？　理由も。",hja:"",en:"Compared to now: bigger, about the same, or smaller is fine? And why?",hen:""},
+{p:3,ja:"部屋はいくつ必要だと思いますか？",hja:"自分の部屋、ゲストルーム、書斎／仕事部屋、和室、その他——具体的に",en:"How many rooms do we need, and which ones?",hen:"Your room, guest room, study/office, tatami room, anything else"},
+{p:3,ja:"平屋がいい？　2階建てがいい？　こだわりはありますか？",hja:"将来ずっと住むことも考えて",en:"Single storey or two storeys? Any strong feelings?",hen:"Bearing in mind we may live here permanently"},
+{p:3,ja:"「ここは絶対に広くしてほしい」場所は？　逆に「狭くても平気」な場所は？",hja:"",en:"Where must be generous? And where can be tight?",hen:""},
+{p:3,ja:"何人まで泊まれるようにしたいですか？",hja:"友達・親戚・祖父母などが来たときを想像して",en:"How many guests should be able to stay?",hen:"Think of friends, relatives, grandparents visiting"},
+
+{p:4,ja:"新しい家で「絶対に欲しい」ものトップ3を、順位をつけて教えてください。",hja:"部屋・設備・機能・雰囲気、なんでもOK。予算は気にせず",en:"Your top 3 must-haves, in order.",hen:"Rooms, equipment, features, atmosphere — anything. Ignore budget",t:"rank"},
+{p:4,ja:"逆に「絶対に嫌」「これだけは避けたい」ことトップ3は？",hja:"",en:"Your top 3 absolute no's.",hen:"",t:"rank"},
+{p:4,ja:"「あったら嬉しいけど、なくても我慢できる」ものは？",hja:"いくつでもどうぞ",en:"What would be nice to have, but you could live without?",hen:"As many as you like"},
+{p:4,ja:"もし予算が足りなくて何かを諦めるとしたら、何から諦められますか？",hja:"上に書いたものの中から。ここが設計の自由度を生みます",en:"If the budget falls short, what would you give up first?",hen:"From what you listed above. This is what gives the design room to move"},
+
+{p:5,ja:"自分の部屋について、希望を自由に書いてください。",hja:"広さ、明るさ、収納、窓の位置、防音、勉強／作業スペース、コンセントの数など",en:"What do you want from your own room?",hen:"Size, light, storage, windows, sound, desk space, number of sockets"},
+{p:5,ja:"新しい家で、どんなふうに過ごしている自分を想像しますか？",hja:"朝、夜、週末、雨の日、友達や親戚が来たとき——場面ごとに",en:"Picture yourself in the new house. What are you doing?",hen:"Mornings, evenings, weekends, rainy days, when guests come"},
+{p:5,ja:"家族みんなで過ごす場所は、どんな空間だといいですか？",hja:"一緒にいたいのか、それぞれ別のことをしながら同じ空間にいたいのか、なども",en:"What should the shared space feel like?",hen:"Together doing the same thing, or separate things in one room?"},
+{p:5,ja:"逆に「一人になれる場所」は必要ですか？　どんな場所がいい？",hja:"",en:"Do you need somewhere to be alone? What would it be like?",hen:""},
+{p:5,ja:"料理・食事について希望はありますか？",hja:"キッチンの形、食卓の場所、外で食べたいか、など",en:"Anything about cooking and eating?",hen:"Kitchen layout, where the table goes, eating outdoors"},
+{p:5,ja:"お風呂・洗面・トイレについて、希望や今の不満はありますか？",hja:"",en:"Anything about the bath, washroom or toilets — wishes or current gripes?",hen:""},
+{p:5,ja:"外（庭・デッキ・駐車場）はどう使いたいですか？",hja:"",en:"How do you want to use the outside — garden, deck, parking?",hen:""},
+
+{p:6,ja:"好きだと思うスタイルを選んでください（いくつでも）。選んだ理由も書けると助かります。",hja:"迷ったら「なんとなく好き」で選んでOK。理由は後から言葉になります",en:"Which styles appeal to you? Pick as many as you like, and say why if you can.",hen:"Gut feeling is fine. The reasons often come later",t:"chips",
+ oja:["モダン（すっきり・直線的・大きな窓）","和モダン（畳や障子を現代的に）","純和風（伝統的な木造・縁側）","北欧（明るい木・白・シンプル）","山小屋／ログハウス（無垢材・こもる感じ）","ミッドセンチュリー（低い屋根・大開口）","古民家リノベ風（古材・黒い柱・味わい）","ミニマル（物が少ない・余白・静か）","インダストリアル（鉄・コンクリート・むき出し）","カントリー（素朴・白い壁・ぬくもり）","リゾート／ホテルライク（非日常感）","ボヘミアン（色・テクスチャ・植物）"],
+ oen:["Modern (clean lines, big windows)","Japanese-modern (tatami, shoji, updated)","Traditional Japanese (timber, engawa)","Scandinavian (pale wood, white, simple)","Cabin / log house (solid timber, cosy)","Mid-century (low roof, wide openings)","Old-farmhouse revival (aged timber, dark posts)","Minimal (few things, space, quiet)","Industrial (steel, concrete, exposed)","Country (rustic, white walls, warm)","Resort / hotel-like (an escape)","Bohemian (colour, texture, plants)"]},
+
+{p:6,ja:"逆に「これは苦手」「絶対に避けたい」スタイルはありますか？",hja:"",en:"Any styles you actively dislike or want to avoid?",hen:"",t:"chips",
+ oja:["モダン（冷たく感じる）","和風（古く感じる）","北欧（よくある感じ）","山小屋（暗い・重い）","古民家風（手入れが大変そう）","ミニマル（落ち着かない）","インダストリアル（無機質）","カントリー（かわいすぎる）","リゾート風（生活感がない）","ボヘミアン（ごちゃつく）","特にない"],
+ oen:["Modern (feels cold)","Japanese (feels dated)","Scandinavian (feels generic)","Cabin (dark, heavy)","Old-farmhouse (high maintenance)","Minimal (unsettling)","Industrial (impersonal)","Country (too cute)","Resort-like (doesn't feel lived in)","Bohemian (too busy)","Nothing in particular"]},
+
+{p:6,ja:"好きな素材を選んでください（いくつでも）。",hja:"実際に触れたとき・見たときに「いいな」と思うもので",en:"Which materials do you like?",hen:"Go by what feels good to touch and look at",t:"chips",
+ oja:["無垢の木（節あり・自然な感じ）","無垢の木（節なし・上品）","白い壁（漆喰・塗り壁）","石（自然石・石張り）","タイル","鉄・黒い金物","コンクリート","土壁・和紙","真鍮・銅（経年変化する金属）","大きなガラス","カーペット・布","畳"],
+ oen:["Solid timber (knotty, natural)","Solid timber (clear grain, refined)","White plaster walls","Stone","Tile","Steel / black metal","Concrete","Earth plaster, washi paper","Brass, copper (ages over time)","Large glass","Carpet, textiles","Tatami"]},
+
+{p:6,ja:"外観について。周りの木々の中で、この家はどう見えてほしいですか？",hja:"森に馴染ませたいのか、はっきり存在感を出したいのか。屋根の形、色、道路からの見え方など",en:"From outside — how should the house sit among the trees?",hen:"Blend into the forest, or stand out? Roof shape, colour, how it reads from the road"},
+
+{p:6,ja:"部屋の明るさ・暗さ、天井の高さについて好みはありますか？",hja:"明るく開放的／少し暗くて落ち着く、天井が高い／こもる感じ——場所によって違ってもOK",en:"Do you prefer bright or dim, high ceilings or low and enclosed?",hen:"Open and light, or darker and calm. It can differ room by room"},
+
+{p:6,ja:"今まで行った場所で「こんな家に住みたい」と思ったものはありますか？",hja:"ホテル、宿、カフェ、友人の家、旅先の建物、映画やドラマの中の家でもOK。写真やリンクがあればぜひ",en:"Anywhere you've been and thought \"I'd want to live like this\"?",hen:"Hotels, inns, cafés, a friend's house, somewhere you travelled, even a film. Photos or links welcome"},
+
+{p:7,ja:"将来この家に住むとしたら、楽しみなことは何ですか？",hja:"",en:"If we end up living here, what are you looking forward to?",hen:""},
+{p:7,ja:"逆に、不安なこと・心配なことはありますか？",hja:"",en:"And what worries you about it?",hen:""},
+{p:7,ja:"何年後、どんなタイミングで住み始めるのがいいと思いますか？",hja:"",en:"When do you think we should actually start living here?",hen:""},
+{p:7,ja:"その他、言っておきたいこと・思いついたことがあれば自由にどうぞ。",hja:"",en:"Anything else at all?",hen:""}
+];
+
+let lang="ja";
+const $=id=>document.getElementById(id);
+
+function build(){
+  const t=UI[lang], form=$("form");
+  form.innerHTML="";
+  let n=0, cur=-1, box=null;
+  Q.forEach((q,i)=>{
+    if(q.p!==cur){
+      cur=q.p;
+      const P=PARTS[cur];
+      const h=document.createElement("div");
+      h.className="part";
+      h.innerHTML=`<div class="part-head"><span class="part-no">${P.no}</span>
+        <h2 class="part-name">${lang==="ja"?P.ja:P.en}</h2></div>
+        <p class="part-note">${lang==="ja"?P.nja:P.nen}</p>`;
+      form.appendChild(h);
+      box=h;
+    }
+    n=i+1;
+    const d=document.createElement("div");
+    d.className="q";
+    const hint=lang==="ja"?q.hja:q.hen;
+    let inner=`<div class="q-head"><span class="q-no">Q${n}</span>
+      <p class="q-text">${lang==="ja"?q.ja:q.en}</p></div>`;
+    if(hint) inner+=`<p class="q-hint">${hint}</p>`;
+    if(q.t==="rank"){
+      inner+=`<div class="rank">`;
+      [t.r1,t.r2,t.r3].forEach((r,k)=>{
+        inner+=`<div class="rank-row"><span class="rank-badge">${r}</span>
+          <input type="text" data-q="${n}" data-rank="${k}" placeholder="${t.phItem}" autocomplete="off">
+          <input type="text" class="why" data-q="${n}" data-why="${k}" placeholder="${t.phWhy}" autocomplete="off"></div>`;
+      });
+      inner+=`</div>`;
+    }else if(q.t==="chips"){
+      const opts = lang==="ja" ? q.oja : q.oen;
+      inner+=`<div class="chips">`;
+      opts.forEach((o,k)=>{
+        inner+=`<label class="chip"><input type="checkbox" data-q="${n}" data-chip="${k}"><span>${o}</span></label>`;
+      });
+      inner+=`</div><textarea data-q="${n}" rows="2" placeholder="${t.phNote}"></textarea>`;
+    }else{
+      inner+=`<textarea data-q="${n}" rows="3"></textarea>`;
+    }
+    d.innerHTML=inner;
+    form.appendChild(d);
+  });
+  form.querySelectorAll("textarea").forEach(a=>{
+    a.addEventListener("input",()=>{a.style.height="auto";a.style.height=a.scrollHeight+"px";count();});
+  });
+  form.querySelectorAll(".rank-row input").forEach(a=>a.addEventListener("input",count));
+  form.querySelectorAll(".chip input").forEach(a=>a.addEventListener("change",count));
+}
+
+function answers(){
+  const map={};
+  document.querySelectorAll("[data-q]").forEach(el=>{
+    const q=el.dataset.q;
+    if(!map[q]) map[q]={text:"",items:["","",""],whys:["","",""],chips:[]};
+    if(el.dataset.chip!==undefined){ if(el.checked) map[q].chips.push(+el.dataset.chip); }
+    else if(el.dataset.rank!==undefined) map[q].items[+el.dataset.rank]=el.value.trim();
+    else if(el.dataset.why!==undefined) map[q].whys[+el.dataset.why]=el.value.trim();
+    else map[q].text=el.value.trim();
+  });
+  return map;
+}
+
+function count(){
+  const m=answers(); let c=0;
+  for(const k in m){
+    const a=m[k];
+    if(a.text || a.items.some(x=>x) || a.chips.length) c++;
+  }
+  $("fill").style.width=(c/Q.length*100)+"%";
+  $("tickA").textContent=UI[lang].tick(c);
+}
+
+function makeText(){
+  const t=UI[lang], m=answers();
+  const who=$("who").value.trim()||"—", when=$("when").value||"—";
+  const L=[];
+  L.push("========================================");
+  L.push(lang==="ja"?"新しい別荘づくり 家族アンケート":"Our New House — Family Questionnaire");
+  L.push(`${t.filledBy}：${who}`);
+  L.push(`${t.filledOn}：${when}`);
+  L.push("========================================");
+  let cur=-1, blank=[];
+  Q.forEach((q,i)=>{
+    const n=i+1, a=m[n];
+    const filled = q.t==="rank" ? a.items.some(x=>x)
+                 : q.t==="chips" ? (a.chips.length || !!a.text)
+                 : !!a.text;
+    if(!filled){ blank.push("Q"+n); return; }
+    if(q.p!==cur){
+      cur=q.p;
+      L.push("");
+      L.push(`■ ${PARTS[cur].no}｜${lang==="ja"?PARTS[cur].ja:PARTS[cur].en}`);
+    }
+    L.push("");
+    L.push(`Q${n}. ${lang==="ja"?q.ja:q.en}`);
+    if(q.t==="rank"){
+      [t.r1,t.r2,t.r3].forEach((r,k)=>{
+        if(!a.items[k]) return;
+        L.push(`   ${r}：${a.items[k]}${a.whys[k]?`（${t.why}：${a.whys[k]}）`:""}`);
+      });
+    }else if(q.t==="chips"){
+      const opts = lang==="ja" ? q.oja : q.oen;
+      if(a.chips.length) L.push(`   ${t.picked}：${a.chips.map(k=>opts[k]).join(" / ")}`);
+      if(a.text) a.text.split("\n").forEach(line=>L.push("   "+line));
+    }else{
+      a.text.split("\n").forEach(line=>L.push("   "+line));
+    }
+  });
+  if(blank.length){
+    L.push("");
+    L.push("----------------------------------------");
+    L.push(`${t.unans}：${blank.join(", ")}`);
+  }
+  return L.join("\n");
+}
+
+function toast(msg){
+  const el=$("toast"); el.textContent=msg; el.classList.add("on");
+  clearTimeout(el._t); el._t=setTimeout(()=>el.classList.remove("on"),1900);
+}
+
+function openModal(){ $("out").value=makeText(); $("veil").classList.add("on"); }
+
+function applyLang(){
+  const t=UI[lang];
+  $("eyebrow").textContent=t.eyebrow;
+  $("mainTitle").innerHTML=t.title;
+  $("mainSub").innerHTML=t.sub;
+  $("lblName").textContent=t.name;
+  $("lblDate").textContent=t.date;
+  $("howto").innerHTML=t.howto;
+  $("export").textContent=t.exp;
+  $("export2").textContent=t.exp;
+  $("lang").textContent=t.lang;
+  $("print").textContent=t.print;
+  $("endNote").textContent=t.endNote;
+  $("modalTitle").textContent=t.modal;
+  $("copy").textContent=t.copy;
+  $("download").textContent=t.dl;
+  $("tickB").textContent="SHEET 1/1";
+}
+
+$("lang").onclick=()=>{
+  const m=answers(), name=$("who").value, date=$("when").value;
+  lang = lang==="ja" ? "en" : "ja";
+  applyLang(); build();
+  document.querySelectorAll("[data-q]").forEach(el=>{
+    const a=m[el.dataset.q]; if(!a) return;
+    if(el.dataset.chip!==undefined) el.checked=a.chips.includes(+el.dataset.chip);
+    else if(el.dataset.rank!==undefined) el.value=a.items[+el.dataset.rank];
+    else if(el.dataset.why!==undefined) el.value=a.whys[+el.dataset.why];
+    else { el.value=a.text; el.style.height="auto"; el.style.height=el.scrollHeight+"px"; }
+  });
+  $("who").value=name; $("when").value=date;
+  count();
+};
+
+$("export").onclick=openModal;
+$("export2").onclick=openModal;
+$("close").onclick=()=>$("veil").classList.remove("on");
+$("veil").onclick=e=>{ if(e.target===$("veil")) $("veil").classList.remove("on"); };
+$("print").onclick=()=>window.print();
+
+$("copy").onclick=async()=>{
+  const ta=$("out");
+  try{ await navigator.clipboard.writeText(ta.value); }
+  catch(e){ ta.removeAttribute("readonly"); ta.select(); document.execCommand("copy"); ta.setAttribute("readonly",""); }
+  toast(UI[lang].copied);
+};
+
+$("download").onclick=()=>{
+  const who=$("who").value.trim()||"noname";
+  const blob=new Blob(["\uFEFF"+makeText()],{type:"text/plain;charset=utf-8"});
+  const a=document.createElement("a");
+  a.href=URL.createObjectURL(blob);
+  a.download=`house-survey_${who}.txt`;
+  a.click();
+  setTimeout(()=>URL.revokeObjectURL(a.href),1000);
+  toast(UI[lang].saved);
+};
+
+window.addEventListener("beforeunload",e=>{
+  const m=answers();
+  for(const k in m){ if(m[k].text||m[k].items.some(x=>x)||m[k].chips.length){ e.preventDefault(); e.returnValue=""; return; } }
+});
+
+function boot(){
+  try{
+    $("when").value=new Date().toISOString().slice(0,10);
+    applyLang(); build(); count();
+    if(!document.querySelector("#form .q")) throw new Error("no questions rendered");
+  }catch(err){
+    $("form").innerHTML='<div class="q"><p class="q-text">'+
+      '質問を表示できませんでした。ブラウザ（Safari / Chrome）で開き直してください。<br>'+
+      '<span style="font-size:13px;color:#7C8880">'+String(err && err.message||err)+'</span></p></div>';
+  }
+}
+if(document.readyState==="loading") document.addEventListener("DOMContentLoaded",boot);
+else boot();
+</script>
+</body>
+</html>
