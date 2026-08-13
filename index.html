@@ -275,7 +275,7 @@ textarea:focus{outline:none;border-color:var(--water);box-shadow:0 0 0 3px rgba(
   <div class="bar-in">
     <div class="gauge">
       <div class="gauge-track"><div class="gauge-fill" id="fill"></div></div>
-      <div class="gauge-ticks"><span id="tickA">回答済み 0 / 48</span><span id="tickB">SHEET 1/1</span></div>
+      <div class="gauge-ticks"><span id="tickA">回答済み 0 / 48</span><span id="tickB">—</span></div>
     </div>
     <div class="bar-btns">
       <button class="btn-lang" id="lang">EN</button>
@@ -319,7 +319,10 @@ textarea:focus{outline:none;border-color:var(--water);box-shadow:0 0 0 3px rgba(
     <p id="endNote">お疲れさまでした。「書き出す」でテキストにしてから送ってください。</p>
     <div class="end-btns">
       <button class="btn btn-key btn-lg" id="export2">書き出す</button>
+      <button class="btn btn-lg" id="load">続きから</button>
       <button class="btn btn-lg" id="print">印刷 / PDF</button>
+      <button class="btn btn-lg" id="clear">最初から</button>
+      <input type="file" id="file" accept=".txt,text/plain" style="display:none">
     </div>
   </div>
 
@@ -354,7 +357,11 @@ const UI = {
     tick:n=>`回答済み ${n} / ${Q.length}`, copied:"コピーしました", saved:"保存しました",
     unans:"未記入", filledBy:"記入者", filledOn:"記入日",
     r1:"1位", r2:"2位", r3:"3位", why:"理由", phWhy:"理由（任意）", phItem:"内容",
-    phNote:"選んだ理由や補足があれば（任意）", picked:"選んだもの"},
+    phNote:"選んだ理由や補足があれば（任意）", picked:"選んだもの",
+    load:"続きから", saved2:"自動保存", savedAt:t=>`保存済み ${t}`, never:"未保存",
+    loaded:"読み込みました", badfile:"このファイルは読み込めませんでした",
+    clearQ:"入力内容をすべて消去します。よろしいですか？", cleared:"消去しました",
+    clear:"最初から", loadHint:"保存したファイル（.txt）を選んでください"},
   en:{eyebrow:"Nagano · New House · Family Brief",
     title:"Our New House<br>Family Questionnaire",
     sub:"A sheet to gather what each of us thinks, before the design begins.<br>Everything written here will be shared with the architect.",
@@ -366,7 +373,11 @@ const UI = {
     tick:n=>`Answered ${n} / ${Q.length}`, copied:"Copied", saved:"Saved",
     unans:"Not answered", filledBy:"Name", filledOn:"Date",
     r1:"1st", r2:"2nd", r3:"3rd", why:"why", phWhy:"why (optional)", phItem:"what",
-    phNote:"Why, or anything to add (optional)", picked:"Picked"}
+    phNote:"Why, or anything to add (optional)", picked:"Picked",
+    load:"Resume", saved2:"Autosaved", savedAt:t=>`Saved ${t}`, never:"Not saved yet",
+    loaded:"Loaded", badfile:"Couldn't read that file",
+    clearQ:"This will erase everything you've written. Continue?", cleared:"Cleared",
+    clear:"Start over", loadHint:"Choose a saved .txt file"}
 };
 
 const PARTS = [
@@ -513,10 +524,10 @@ function build(){
     form.appendChild(d);
   });
   form.querySelectorAll("textarea").forEach(a=>{
-    a.addEventListener("input",()=>{a.style.height="auto";a.style.height=a.scrollHeight+"px";count();});
+    a.addEventListener("input",()=>{a.style.height="auto";a.style.height=a.scrollHeight+"px";count();save();});
   });
-  form.querySelectorAll(".rank-row input").forEach(a=>a.addEventListener("input",count));
-  form.querySelectorAll(".chip input").forEach(a=>a.addEventListener("change",count));
+  form.querySelectorAll(".rank-row input").forEach(a=>a.addEventListener("input",()=>{count();save();}));
+  form.querySelectorAll(".chip input").forEach(a=>a.addEventListener("change",()=>{count();save();}));
 }
 
 function answers(){
@@ -586,6 +597,104 @@ function makeText(){
   return L.join("\n");
 }
 
+
+/* ===== save / restore ===== */
+const KEY="yamanoie-survey-v1";
+
+function snapshot(){
+  return {v:1, lang:lang, who:$("who").value, when:$("when").value,
+          ans:answers(), at:new Date().toISOString()};
+}
+
+function restore(data){
+  if(!data || !data.ans) return false;
+  if(data.lang && data.lang!==lang){ lang=data.lang; applyLang(); build(); }
+  if(data.who!==undefined) $("who").value=data.who;
+  if(data.when) $("when").value=data.when;
+  document.querySelectorAll("[data-q]").forEach(el=>{
+    const a=data.ans[el.dataset.q]; if(!a) return;
+    if(el.dataset.chip!==undefined) el.checked=(a.chips||[]).includes(+el.dataset.chip);
+    else if(el.dataset.rank!==undefined) el.value=(a.items||[])[+el.dataset.rank]||"";
+    else if(el.dataset.why!==undefined) el.value=(a.whys||[])[+el.dataset.why]||"";
+    else { el.value=a.text||""; el.style.height="auto"; el.style.height=el.scrollHeight+"px"; }
+  });
+  count(); return true;
+}
+
+let saveTimer=null, storageOK=true;
+function save(){
+  clearTimeout(saveTimer);
+  saveTimer=setTimeout(()=>{
+    try{
+      const snap=snapshot();
+      localStorage.setItem(KEY, JSON.stringify(snap));
+      storageOK=true; stamp(snap.at);
+    }catch(e){ storageOK=false; stamp(null); }
+  }, 600);
+}
+
+function stamp(iso){
+  const t=UI[lang];
+  if(!iso){ $("tickB").textContent=t.never; return; }
+  const d=new Date(iso);
+  const hh=String(d.getHours()).padStart(2,"0"), mm=String(d.getMinutes()).padStart(2,"0");
+  $("tickB").textContent=t.savedAt(`${hh}:${mm}`);
+}
+
+function loadLocal(){
+  try{
+    const raw=localStorage.getItem(KEY);
+    if(!raw) { stamp(null); return; }
+    const data=JSON.parse(raw);
+    restore(data); stamp(data.at);
+  }catch(e){ stamp(null); }
+}
+
+/* ---- parse an exported .txt back into answers ---- */
+function parseText(txt){
+  const ans={}, lines=txt.split(/\r?\n/);
+  let who="", when="", cur=null, buf=[];
+  const flush=()=>{
+    if(cur===null) return;
+    const q=Q[cur-1]; if(!q){ cur=null; buf=[]; return; }
+    if(!ans[cur]) ans[cur]={text:"",items:["","",""],whys:["","",""],chips:[]};
+    const A=ans[cur];
+    buf.forEach(raw=>{
+      const line=raw.replace(/^\s+/,"");
+      if(!line) return;
+      let m;
+      if(q.t==="rank" && (m=line.match(/^(1位|2位|3位|1st|2nd|3rd)[：:]\s*(.*)$/))){
+        const k={"1位":0,"1st":0,"2位":1,"2nd":1,"3位":2,"3rd":2}[m[1]];
+        let val=m[2], why="";
+        const w=val.match(/^(.*?)（(?:理由)[：:]\s*(.*)）\s*$/) || val.match(/^(.*?)\((?:why)[：:]\s*(.*)\)\s*$/);
+        if(w){ val=w[1]; why=w[2]; }
+        A.items[k]=val.trim(); A.whys[k]=why.trim();
+      }else if(q.t==="chips" && (m=line.match(/^(?:選んだもの|Picked)[：:]\s*(.*)$/))){
+        const opts=(q.oja||[]).concat(q.oen||[]);
+        m[1].split(/\s*\/\s*/).forEach(name=>{
+          let i=(q.oja||[]).indexOf(name.trim());
+          if(i<0) i=(q.oen||[]).indexOf(name.trim());
+          if(i>=0 && !A.chips.includes(i)) A.chips.push(i);
+        });
+      }else{
+        A.text += (A.text?"\n":"") + line;
+      }
+    });
+    cur=null; buf=[];
+  };
+  lines.forEach(line=>{
+    let m;
+    if((m=line.match(/^(?:記入者|Name)[：:]\s*(.*)$/)) && !cur){ who=m[1].trim(); return; }
+    if((m=line.match(/^(?:記入日|Date)[：:]\s*(.*)$/)) && !cur){ when=m[1].trim(); return; }
+    if((m=line.match(/^Q(\d+)\.\s/))){ flush(); cur=+m[1]; return; }
+    if(/^[■=\-]/.test(line.trim())){ flush(); return; }
+    if(/^(?:未記入|Not answered)[：:]/.test(line.trim())){ flush(); return; }
+    if(cur!==null) buf.push(line);
+  });
+  flush();
+  return {ans, who:who==="—"?"":who, when:(when&&/^\d{4}-\d{2}-\d{2}$/.test(when))?when:"", lang:lang};
+}
+
 function toast(msg){
   const el=$("toast"); el.textContent=msg; el.classList.add("on");
   clearTimeout(el._t); el._t=setTimeout(()=>el.classList.remove("on"),1900);
@@ -624,7 +733,7 @@ $("lang").onclick=()=>{
     else { el.value=a.text; el.style.height="auto"; el.style.height=el.scrollHeight+"px"; }
   });
   $("who").value=name; $("when").value=date;
-  count();
+  count(); save();
 };
 
 $("export").onclick=openModal;
@@ -632,6 +741,37 @@ $("export2").onclick=openModal;
 $("close").onclick=()=>$("veil").classList.remove("on");
 $("veil").onclick=e=>{ if(e.target===$("veil")) $("veil").classList.remove("on"); };
 $("print").onclick=()=>window.print();
+
+$("load").onclick=()=>$("file").click();
+$("file").onchange=e=>{
+  const f=e.target.files[0]; if(!f) return;
+  const r=new FileReader();
+  r.onload=()=>{
+    try{
+      const d=parseText(String(r.result));
+      if(!Object.keys(d.ans).length) throw new Error("empty");
+      restore(d); save(); toast(UI[lang].loaded);
+      window.scrollTo({top:0,behavior:"smooth"});
+    }catch(err){ toast(UI[lang].badfile); }
+  };
+  r.onerror=()=>toast(UI[lang].badfile);
+  r.readAsText(f);
+  e.target.value="";
+};
+
+$("clear").onclick=()=>{
+  if(!confirm(UI[lang].clearQ)) return;
+  try{ localStorage.removeItem(KEY); }catch(e){}
+  document.querySelectorAll("[data-q]").forEach(el=>{
+    if(el.type==="checkbox") el.checked=false; else el.value="";
+    if(el.tagName==="TEXTAREA") el.style.height="auto";
+  });
+  $("who").value=""; count(); stamp(null); toast(UI[lang].cleared);
+  window.scrollTo({top:0,behavior:"smooth"});
+};
+
+$("who").addEventListener("input",save);
+$("when").addEventListener("change",save);
 
 $("copy").onclick=async()=>{
   const ta=$("out");
@@ -652,6 +792,7 @@ $("download").onclick=()=>{
 };
 
 window.addEventListener("beforeunload",e=>{
+  if(storageOK) return;   /* autosaved — safe to close */
   const m=answers();
   for(const k in m){ if(m[k].text||m[k].items.some(x=>x)||m[k].chips.length){ e.preventDefault(); e.returnValue=""; return; } }
 });
@@ -661,6 +802,7 @@ function boot(){
     $("when").value=new Date().toISOString().slice(0,10);
     applyLang(); build(); count();
     if(!document.querySelector("#form .q")) throw new Error("no questions rendered");
+    loadLocal();
   }catch(err){
     $("form").innerHTML='<div class="q"><p class="q-text">'+
       '質問を表示できませんでした。ブラウザ（Safari / Chrome）で開き直してください。<br>'+
