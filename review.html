@@ -1,0 +1,421 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>山の家 — 家族の回答まとめ</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho+B1:wght@400;600&family=Zen+Kaku+Gothic+New:wght@400;500;700&family=Barlow+Semi+Condensed:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ink:#1B2620; --ink-2:#4B5A52; --ink-3:#7C8880;
+  --paper:#E7EAE2; --card:#F7F8F4; --line:#C6CCC0; --line-soft:#DDE1D8;
+  --p1:#2C5A6E; --p2:#5E7343; --p3:#B07434; --p4:#6B5B7B;
+  --agree:#5E7343; --split:#C0662B; --watch:#2C5A6E;
+  --display:"Shippori Mincho B1",serif;
+  --body:"Zen Kaku Gothic New","Hiragino Kaku Gothic ProN","Yu Gothic",sans-serif;
+  --util:"Barlow Semi Condensed","Zen Kaku Gothic New",sans-serif;
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--body);
+  font-size:16px;line-height:1.8;overflow-wrap:anywhere;padding-bottom:80px}
+button{font-family:var(--util);cursor:pointer;border-radius:2px}
+
+/* gate */
+#gate{position:fixed;inset:0;background:var(--paper);z-index:900;display:flex;
+  align-items:center;justify-content:center;padding:24px}
+.gate-box{max-width:400px;width:100%;border:1.5px solid var(--ink);background:var(--card);padding:30px 26px}
+.gate-box h1{font-family:var(--display);font-size:23px;margin:0 0 6px;font-weight:600}
+.gate-box p{font-size:14px;color:var(--ink-2);margin:0 0 20px}
+.gate-box input{width:100%;padding:11px 13px;border:1px solid var(--line);border-radius:3px;
+  font-family:var(--body);font-size:16px;background:#fff;color:var(--ink)}
+.gate-box input:focus{outline:none;border-color:var(--p1);box-shadow:0 0 0 3px rgba(44,90,110,.12)}
+.gate-box button{width:100%;margin-top:11px;padding:12px;border:1px solid var(--p1);
+  background:var(--p1);color:#fff;font-size:14px;letter-spacing:.09em}
+.gate-err{color:var(--split);font-size:13.5px;margin-top:10px;min-height:20px}
+
+.wrap{max-width:1180px;margin:0 auto;padding:0 22px;display:none}
+.wrap.on{display:block}
+
+/* header */
+.tb{border:1.5px solid var(--ink);margin:40px 0 0;background:var(--card)}
+.tb-head{padding:26px 26px 22px;border-bottom:1px solid var(--ink)}
+.eyebrow{font-family:var(--util);font-size:12px;letter-spacing:.22em;color:var(--p1);
+  text-transform:uppercase;margin:0 0 10px}
+.tb-head h1{font-family:var(--display);font-weight:600;font-size:clamp(26px,4.4vw,38px);
+  line-height:1.3;margin:0;letter-spacing:.02em}
+.tb-head p{margin:12px 0 0;font-size:14px;color:var(--ink-2);line-height:1.8}
+.legend{display:flex;flex-wrap:wrap;gap:0;border-top:none}
+.legend div{flex:1 1 150px;padding:13px 20px;border-right:1px solid var(--line);
+  border-top:1px solid var(--line)}
+.legend div:last-child{border-right:none}
+.legend b{display:block;font-family:var(--util);font-size:11px;letter-spacing:.16em;
+  color:var(--ink-3);text-transform:uppercase;font-weight:500}
+.legend span{font-size:15px;font-weight:500}
+
+/* who bar */
+.bar{position:sticky;top:0;z-index:60;background:rgba(231,234,226,.95);
+  backdrop-filter:blur(8px);border-bottom:1px solid var(--line);margin-top:0}
+.bar-in{max-width:1180px;margin:0 auto;padding:9px 22px;display:flex;gap:10px;
+  align-items:center;flex-wrap:wrap}
+.bar label{font-family:var(--util);font-size:11.5px;letter-spacing:.14em;color:var(--ink-3);
+  text-transform:uppercase}
+select,.filt{font-family:var(--body);font-size:14px;padding:6px 10px;border:1px solid var(--line);
+  border-radius:3px;background:#fff;color:var(--ink)}
+.filts{display:flex;gap:6px;margin-left:auto;flex-wrap:wrap}
+.filt{border:1px solid var(--line);background:transparent;font-family:var(--util);
+  letter-spacing:.06em;font-size:13px;padding:6px 12px;color:var(--ink-2)}
+.filt.on{background:var(--ink);border-color:var(--ink);color:var(--paper)}
+
+/* agenda */
+.sec{margin:52px 0 0}
+.sec-head{display:flex;align-items:baseline;gap:13px;border-bottom:1.5px solid var(--ink);
+  padding-bottom:9px;margin-bottom:8px}
+.sec-no{font-family:var(--util);font-size:12.5px;letter-spacing:.18em;color:var(--p1);font-weight:600}
+.sec-head h2{font-family:var(--display);font-size:22px;font-weight:600;margin:0}
+.sec-note{font-size:13.5px;color:var(--ink-3);margin:0 0 20px}
+
+.agenda{display:grid;grid-template-columns:repeat(auto-fill,minmax(310px,1fr));gap:12px}
+.ag{background:var(--card);border:1px solid var(--line-soft);border-left:3px solid var(--split);padding:16px 18px}
+.ag.a{border-left-color:var(--agree)}
+.ag.w{border-left-color:var(--watch)}
+.ag h3{margin:0 0 6px;font-size:16px;font-weight:700;line-height:1.55}
+.ag p{margin:0;font-size:14px;color:var(--ink-2);line-height:1.75}
+.ag .qref{font-family:var(--util);font-size:11.5px;letter-spacing:.1em;color:var(--ink-3);
+  display:block;margin-top:8px}
+.ag a{color:var(--p1);text-decoration:none;border-bottom:1px solid currentColor}
+
+/* question block */
+.qb{background:var(--card);border:1px solid var(--line-soft);margin-bottom:14px}
+.qb.hide{display:none}
+.qb-top{padding:15px 18px 0;display:flex;gap:11px;align-items:baseline;flex-wrap:wrap}
+.qn{font-family:var(--util);font-size:13px;font-weight:600;color:var(--p1);letter-spacing:.05em}
+.qt{margin:0;font-size:16.5px;font-weight:500;line-height:1.65;flex:1 1 320px}
+.tag{font-family:var(--util);font-size:11px;letter-spacing:.13em;text-transform:uppercase;
+  padding:3px 9px;border-radius:2px;color:#fff;white-space:nowrap;font-weight:500}
+.tag.agree{background:var(--agree)} .tag.split{background:var(--split)} .tag.watch{background:var(--watch)}
+.qnote{margin:9px 18px 0;padding:9px 13px;background:rgba(192,102,43,.07);
+  border-left:2px solid var(--split);font-size:14px;color:var(--ink-2);line-height:1.75}
+.qb.t-agree .qnote{background:rgba(94,115,67,.07);border-left-color:var(--agree)}
+.qb.t-watch .qnote{background:rgba(44,90,110,.07);border-left-color:var(--watch)}
+
+.grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;padding:14px 18px 0}
+.ans{border-top:2px solid var(--c);padding-top:9px;min-width:0}
+.ans .who{font-family:var(--util);font-size:11.5px;letter-spacing:.14em;text-transform:uppercase;
+  color:var(--c);font-weight:600;margin-bottom:5px}
+.ans .body{font-size:14.5px;line-height:1.8;white-space:pre-wrap}
+.ans .none{color:var(--ink-3);font-size:13.5px;font-style:italic}
+
+/* comments */
+.cmt{margin:16px 18px 0;border-top:1px solid var(--line);padding:13px 0 16px}
+.cmt-list{display:flex;flex-direction:column;gap:8px;margin-bottom:10px}
+.cmt-item{font-size:14.5px;line-height:1.75;padding-left:11px;border-left:2px solid var(--line)}
+.cmt-item b{font-family:var(--util);letter-spacing:.08em;font-size:12.5px;
+  text-transform:uppercase;margin-right:8px}
+.cmt-item time{font-family:var(--util);font-size:11.5px;color:var(--ink-3);margin-left:7px}
+.cmt-form{display:flex;gap:7px;flex-wrap:wrap}
+.cmt-form input{flex:1 1 240px;min-width:0;padding:9px 12px;border:1px solid var(--line);
+  border-radius:3px;font-family:var(--body);font-size:15px;background:#fff;color:var(--ink)}
+.cmt-form input:focus{outline:none;border-color:var(--p1);box-shadow:0 0 0 3px rgba(44,90,110,.12)}
+.cmt-form button{padding:9px 16px;border:1px solid var(--p1);background:var(--p1);color:#fff;
+  font-size:13px;letter-spacing:.08em}
+.cmt-form button:disabled{opacity:.5;cursor:default}
+.stat{display:flex;gap:6px;margin-top:10px;flex-wrap:wrap;align-items:center}
+.stat span{font-family:var(--util);font-size:11px;letter-spacing:.14em;color:var(--ink-3);
+  text-transform:uppercase;margin-right:3px}
+.sb{border:1px solid var(--line);background:transparent;font-family:var(--util);font-size:12.5px;
+  letter-spacing:.06em;padding:5px 12px;color:var(--ink-2)}
+.sb.on{color:#fff}
+.sb[data-s="決定"].on{background:var(--agree);border-color:var(--agree)}
+.sb[data-s="保留"].on{background:var(--ink-3);border-color:var(--ink-3)}
+.sb[data-s="要相談"].on{background:var(--split);border-color:var(--split)}
+
+.toast{position:fixed;left:50%;bottom:26px;transform:translate(-50%,14px);background:var(--ink);
+  color:var(--paper);padding:11px 22px;font-family:var(--util);font-size:13.5px;letter-spacing:.06em;
+  opacity:0;pointer-events:none;transition:all .25s;z-index:200;border-radius:2px}
+.toast.on{opacity:1;transform:translate(-50%,0)}
+.end{margin:48px 0 0;border-top:1.5px solid var(--ink);padding-top:22px;display:flex;gap:9px;
+  flex-wrap:wrap;justify-content:center}
+.end button{border:1px solid var(--ink);background:transparent;color:var(--ink);
+  padding:11px 22px;font-size:13.5px;letter-spacing:.08em}
+.end button:hover{background:var(--ink);color:var(--paper)}
+
+@media (max-width:900px){ .grid{grid-template-columns:repeat(2,1fr)} }
+@media (max-width:600px){
+  .wrap{padding:0 12px} .bar-in{padding:8px 12px}
+  .grid{grid-template-columns:1fr;gap:12px;padding:12px 14px 0}
+  .qb-top,.qnote,.cmt{margin-left:0;margin-right:0}
+  .qb-top{padding:14px 14px 0} .qnote{margin:9px 14px 0} .cmt{margin:14px 14px 0}
+  .tb-head{padding:20px 18px 18px} .legend div{flex:1 1 100%}
+  .cmt-form input,select{font-size:16px}
+  .filts{margin-left:0;width:100%}
+  .ans{border-top-width:3px}
+}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+@media print{.bar,#gate,.cmt-form,.end,.filts{display:none!important}
+  body{background:#fff}.qb{break-inside:avoid;background:#fff}}
+</style>
+</head>
+<body>
+<div id="gate">
+  <div class="gate-box">
+    <h1>山の家</h1>
+    <p>家族の回答まとめ。合言葉を入れてください。</p>
+    <input type="password" id="pass" autocomplete="current-password" placeholder="合言葉">
+    <button id="enter">開く</button>
+    <div class="gate-err" id="gerr"></div>
+  </div>
+</div>
+
+<div class="bar" id="bar" style="display:none">
+  <div class="bar-in">
+    <label for="me">コメントする人</label>
+    <select id="me">
+      <option value="">選んでください</option>
+      <option>Sachi</option><option>Issay</option><option>Mia</option><option>Motoh</option><option>建築家</option>
+    </select>
+    <div class="filts">
+      <button class="filt on" data-f="all">すべて</button>
+      <button class="filt" data-f="split">割れている</button>
+      <button class="filt" data-f="agree">一致</button>
+      <button class="filt" data-f="watch">要確認</button>
+      <button class="filt" data-f="open">未決だけ</button>
+    </div>
+  </div>
+</div>
+
+<div class="wrap" id="wrap">
+
+<div class="tb">
+  <div class="tb-head">
+    <p class="eyebrow">Nagano · Family Brief · 2026.08</p>
+    <h1>山の家<br>家族4人の回答まとめ</h1>
+    <p>48問へのSachi・Issay・Mia・Motohの回答を並べたものです。話し合った内容は各項目のコメント欄に書き足してください。全員に共有されます。<br>まとまったら、これをもとに建築家へ渡す設計要件書をつくります。</p>
+  </div>
+  <div class="legend">
+    <div><b>回答</b><span>4人 / 48問</span></div>
+    <div><b>意見が一致</b><span id="nAgree">—</span></div>
+    <div><b>割れている</b><span id="nSplit">—</span></div>
+    <div><b>要確認</b><span id="nWatch">—</span></div>
+  </div>
+</div>
+
+<div class="sec">
+  <div class="sec-head"><span class="sec-no">AGENDA A</span><h2>もう決まっているようなもの</h2></div>
+  <p class="sec-note">4人の答えがそろっている項目です。会議では確認するだけで済みます。</p>
+  <div class="agenda" id="agA"></div>
+</div>
+
+<div class="sec">
+  <div class="sec-head"><span class="sec-no">AGENDA B</span><h2>話し合うこと</h2></div>
+  <p class="sec-note">意見が割れています。ここが会議の本題です。上から順に、設計と予算への影響が大きい順に並べました。</p>
+  <div class="agenda" id="agB"></div>
+</div>
+
+<div class="sec">
+  <div class="sec-head"><span class="sec-no">AGENDA C</span><h2>一人だけが書いたこと</h2></div>
+  <p class="sec-note">見落とされがちですが、住み始めてから効いてくる項目です。</p>
+  <div class="agenda" id="agC"></div>
+</div>
+
+<div class="sec">
+  <div class="sec-head"><span class="sec-no">ALL</span><h2>48問すべての回答</h2></div>
+  <p class="sec-note">上のフィルターで絞り込めます。各項目にコメントとステータスを付けられます。</p>
+  <div id="qs"></div>
+</div>
+
+<div class="end">
+  <button id="exp">話し合いの記録を書き出す</button>
+  <button id="pr">印刷 / PDF</button>
+</div>
+
+</div>
+<div class="toast" id="toast"></div>
+<script>
+const ROWS=[{"n": 1, "p": 0, "t": "今の別荘で、一番好きな場所・好きな瞬間はどこですか？　その理由も教えてください。", "tag": "agree", "note": "", "a": {"Sachi": "夜が静かなところ。海の底にいるような感覚になってぐっすり寝られる。セミが日中しか鳴かないので夜はとても静か。日中も聞こえてくるのは鳥と虫の鳴き声だけ。自然の中にいる感覚が好き。", "Issay": "ベランダで自然を感じるとこ。", "Mia": "こたつ。冬はあったかいから。", "Motoh": "草刈りが終わってスッキリした家の周りを見た時。焚き火をしている時。朝、バルコニーからコーヒーを見ながら森を眺める時。"}}, {"n": 2, "p": 0, "t": "今の別荘で「ここが不便」「ここが嫌だ」と思うことは？", "tag": "agree", "note": "トイレ・低いキッチン・虫・寒さを全員が挙げている。新しい家の出発点。", "a": {"Sachi": "①キッチンが狭くて、キッチンカウンターが低い（洗面台も低い）\n②トイレが一つしかない。4人だと取り合いになることも。\n③生き物たち：ある程度はしょうがないけど、なにか対応方法があるといいな。\n1) カマドーマがやたら多い。\n2) 食べ物を出していると、蟻が出現する。\n3) １階と2階の間にネズミがいる感じ\n4) キツツキが穴をあける\n5) 久しぶりに別荘に来ると虫の死骸が沢山・・・。\n④洗濯物を干すところが室内にしていて、和室が物置になっている。\n⑤冬は（当たり前ですが）暖房されていないエリアが極寒。\n⑥別荘に来ていない間に空気の入れ替えができない。湿気を減らす工夫が欲しい。\n⑦廊下が暗い\n⑧冬に窓に結露ができる\n⑨シャッターの開け閉めがやりづらい\n⑩照明をつけていないと暗い。外からの光がもっと入ってほしい\n⑪リビングの高い位置にある窓の掃除ができない\n⑫家でお風呂にはあまり入らないが、追い炊き機能がないので冬にお風呂に入ると、体が温まるのに時間がかかる。", "Issay": "トイレが一つ、トイレがベッドから遠い、日当たりがちょっと少ない、キッチンが低い。", "Mia": "トイレが一つ。\nお風呂が狭い。\n虫が多すぎる。\n部屋数が少ない。", "Motoh": "トイレが遠い。もう一つ欲しい。和室が湿気ている。家に入るとカビ臭い。全体的に寒い。キッチンが低い。リビングが狭い。ゴロゴロして気持ちいいスペースがない。虫がたくさん死んでいる。掃除がしにくい。日当たりが悪い。窓の掃除がしにくい。景色がない。壁が殺風景。キッチンの収納が少ない。玄関で汚れて入ってきた時に、そのままゴミを持って帰ってしまう。玄関周りの収納が少ない。洗濯機・乾燥機がうるさい。キツツキの穴が多い。"}}, {"n": 3, "p": 0, "t": "冬に困ったこと・寒いと感じた場所はありますか？", "tag": "agree", "note": "寒さは全員の共通体験。断熱は最優先の投資対象。", "a": {"Sachi": "①全体的に寒い。冬の夜に到着したときは、東京を出発するときに暖房を入れていても、家の中は寒い。特に2階までは暖かくならないので、布団が凍っている状態。そこから布団を温める必要があり、不便だった。\n②廊下は常に寒い\n③洗面所（あまり家でお風呂には入らないが、入った後は極寒）\n④灯油を購入する必要がある。", "Issay": "うん。", "Mia": "お風呂出た瞬間。", "Motoh": "２階以外全部寒い。特に廊下。リモートで部屋を温めようと思ってもストーブがつかない時。灯油買い出し、補給がめんどくさい。"}}, {"n": 4, "p": 0, "t": "夏に困ったこと・暑い／不便だと感じたことはありますか？", "tag": "agree", "note": "", "a": {"Sachi": "夏は涼しい。夜少し2階が暑く感じるときもあるが、数日程度。\n1階は常に涼しい。", "Issay": "たまに暑い時がある。", "Mia": "特になし。", "Motoh": "暑いと思ったことは少ない。春は花粉が多い。黄色くなる。"}}, {"n": 5, "p": 0, "t": "「なくても困らなかったな」と思うものはありますか？", "tag": "", "note": "", "a": {"Sachi": "自転車（乗る機会がほぼない）\nBBQグッズ（七輪で十分）\nブルーシート（以外と使わない）\n気が付かず、いらないものが沢山ある気がする。", "Issay": "玄関の左横のスペースをうまく使いたい。", "Mia": "ツリーハウス", "Motoh": "廊下の下の収納（電気がないから見にくい）。一階の和室。"}}, {"n": 6, "p": 0, "t": "今の別荘の思い出で、新しい家にも引き継ぎたいものはありますか？", "tag": "split", "note": "Sachiは「個室がなく全員が同じ場所にいた」ことを引き継ぎたい。Motohも「家族団欒」を挙げる。子どもたちの個室希望と正面から衝突する。", "a": {"Sachi": "・家族で川の字になって寝るのは意外と楽しい。\n・家族で一緒に過ごす時間が多く、個人部屋がないのでみんながいつも同じ場所にいること。", "Issay": "雰囲気。", "Mia": "お風呂のヒノキの香り", "Motoh": "こじんまりしてて、こそもが小さい頃は良かったと思う。家族団欒が今ではとても良い思い出。雪が降っても除雪しなくて良いところ。デッキが腐ったりしない。"}}, {"n": 7, "p": 1, "t": "このエリア（別荘地・周辺環境）で、好きなところは何ですか？", "tag": "agree", "note": "", "a": {"Sachi": "・周りに人がいないので、静かに過ごすことができる。\n・八ヶ岳があること\n・温泉施設が多い\n・空気や水がおいしい\n・スーパーに行くと食材が豊富\n・騒音もほぼない（生き物はOK）\n・好きなお店も多く、普段必要なものはなんでも買えて便利", "Issay": "自然。", "Mia": "涼しいところ\n美味しいレストランがいっぱいあるところ\nいろんな温泉に近いところ", "Motoh": "静けさ。レストラン。スーパーで売っている新鮮な野菜、フルーツ、肉、魚。自然。夏の涼しさ。"}}, {"n": 8, "p": 1, "t": "逆に、このエリアで不便だと感じること・気になることは？", "tag": "agree", "note": "", "a": {"Sachi": "・道路が狭い（当たり前ですが、別荘地内に歩道はありません）\n・現金しか使えないところがまだたくさん\n・別荘内のコミュニティがもっとあってもいいと思う\n・家の中のネット環境は問題ないが、外に出ると通信状況が悪いエリアもある\n・のらざあが管理事務所までではなく、その先のエリアにも停車するとありがたい\n・粗大ごみが捨てづらい", "Issay": "虫", "Mia": "虫\n歩く距離にスーパーとかコンビニがない", "Motoh": "寒さ、虫、湿気。"}}, {"n": 9, "p": 1, "t": "新しい土地（隣の土地）について、気づいていることはありますか？", "tag": "watch", "note": "鹿の通り道・隣家の生活音・マダニ。SachiとMotohが同じ懸念を別の言葉で書いている。", "a": {"Sachi": "・鹿の通り道になっている（マダニがいっぱいいそうで不安）\n・鹿が木の皮を食べている木があり、倒木しそうで気になる\n・隣の家と少し近くなるので、家を建てるときは方向をよく考えたい\n・木を切れば、日当たりは良くなるが、夏に暑くなり過ぎないような工夫はほしい。\n・道路の反対側にも家があるので、寝室やお風呂の窓の位置はそのあたりも配慮したい。", "Issay": "日当たりがいい", "Mia": "なし", "Motoh": "横に家があるので、生活音や犬の鳴き声なんかはすると思う。日当たりは良さそう。フラット。鹿がよく通っている。"}}, {"n": 10, "p": 1, "t": "その土地から「絶対に見たい景色」はありますか？　どの部屋から見たいですか？", "tag": "split", "note": "SachiとMotohはリビングから森。Issayは「下を見たい」。Miaはなし。窓の設計を左右する。", "a": {"Sachi": "朝起きて、リビングに来た時に大きな窓があって、木々が見渡せること。人工物が見えないのが望ましい。太陽の光が部屋に入ってくると嬉しい。", "Issay": "下を見たい", "Mia": "なし", "Motoh": "リビングからゆったり森を眺めたい。"}}, {"n": 11, "p": 1, "t": "逆に「これは見えないようにしたい」「隠したい」ものはありますか？", "tag": "agree", "note": "", "a": {"Sachi": "リビングから周りの家や道路が見えないのが望ましい。", "Issay": "電線が見たくないから道路の反対側。", "Mia": "なし", "Motoh": "横の家が古くて汚いので、あまり見たくない。洗濯物とか。"}}, {"n": 12, "p": 1, "t": "土地にある木や自然について、残したいもの・切ってもいいものはありますか？", "tag": "split", "note": "Motoh「全部切ってOK」／Sachi「切りすぎて夏が暑いのは嫌」／Issay「好きな木がある」。着工前に決着が必要。", "a": {"Sachi": "残したいものは特にない。倒木しそうな木は切ってよい。", "Issay": "好きな木がある", "Mia": "なし", "Motoh": "全部切ってもOK。今の家の木ももっと切りたい。細い木や、将来家のやねにかかりそうな木。"}}, {"n": 13, "p": 1, "t": "今の別荘との距離感・関係はどうしたいですか？", "tag": "split", "note": "Sachiは今の別荘をゲストハウスに。Issayは「間になんか作りたい」。Motohは「小道みたいに」。方向は近い。", "a": {"Sachi": "今の別荘をゲストハウスにしてもいいかなと思っているので、敷地内で行き来はできるようにしたい。", "Issay": "間になんか作りたい", "Mia": "特になし", "Motoh": "繋げなくてもいいと思う、でも行き来しやすい方が良い。小道みたいにできたらいいと思う。"}}, {"n": 14, "p": 1, "t": "冬のアクセス（雪・凍結・除雪・駐車）について、今困っていることや希望はありますか？", "tag": "watch", "note": "Sachiは水抜きの自動化と家のそばの駐車場を希望。Motohは「ない」。除雪と駐車の実務はSachiの視点が具体的。", "a": {"Sachi": "道路の除雪はちゃんとしてくれるので、そこまで不便はなかったが、駐車場から家の扉まで少し距離があるので、大きな荷物を持っていると少し大変だった。\n家のそばに駐車場があると便利だと思う。\n\n冬は水抜きが必須だが、これをもっと簡易、自動でできると嬉しい。", "Issay": "まだあんまわからない", "Mia": "なし", "Motoh": "ない"}}, {"n": 15, "p": 2, "t": "あなたにとって、この家は「何をする場所」ですか？", "tag": "watch", "note": "", "a": {"Sachi": "しばらくは、日本に来た時に訪れる場所。\nのんびり過ごして、家の周りを走ったり、八ヶ岳に登山に行ったり、お気に入りのレストランで食事を楽しみたい。読書をしたり、料理を楽しみたい。\n家族でゆっくり一緒に過ごす大事な場所にしたい。\n長期滞在するときは、友達や家族にも遊びに来てもらって、家でみんなでワイワイしたい。\n\n定住する場所になったときは、\n①アクティブに過ごすための場所（家の中にジムがあってもいい）\n②地元の食材を使って料理を楽しむ\n③家族・友人たちに遊びに来てもらって楽しく過ごす", "Issay": "避暑地、自然、リラックス。", "Mia": "遊ぶ、人とワイワイする", "Motoh": "リフレッシュする。将来は生活する場所。本を読む。ゴルフをする。今よりは人が集まってもいいと思う。オーブン料理をたくさんする。"}}, {"n": 16, "p": 2, "t": "1年のうち、いつ・どのくらいの期間ここで過ごしたいですか？", "tag": "split", "note": "1〜2週間／ホリデー／夏1か月→定住／年100日。滞在量が断熱・設備の投資判断を決める。", "a": {"Sachi": "しばらくは、夏に1か月ほど過ごしたい\nいずれは、定住したい。", "Issay": "一二週間？", "Mia": "ホリデー", "Motoh": "気持ち良い季節を中心に年間100日ぐらいは過ごしたい。"}}, {"n": 17, "p": 2, "t": "夏と冬で、過ごし方はどう変わりますか？　それぞれ、ここで何をしていたいですか？", "tag": "agree", "note": "", "a": {"Sachi": "過ごし方はあまり変わらないが、アクティブに過ごしたい。\n冬はのんびり家の中で過ごすのもいい。", "Issay": "ステイホームと外出", "Mia": "夏＝涼めるところ\n冬＝のんびりできるところ", "Motoh": "冬は外が寒いから家にいる時間が増えると良いと思う。"}}, {"n": 18, "p": 2, "t": "ここで仕事や勉強をしますか？　どんな環境が必要ですか？", "tag": "agree", "note": "防音と高速ネットは4人全員。仕事・勉強・ゲーム、用途は違うが要件は同じ。", "a": {"Sachi": "①夫は仕事、子供たちは勉強するため、集中できる場所は必要\n仕事部屋は防音でもいいかも（ビデオ会議することもあるので）\n②今光回線が入っているので、同じようなサービスを使うか、スターリンクなどでもいいかもしれない\n③みんなで映画を観たり、読書する場所があってもいい", "Issay": "集中するとことゲームできるとこ", "Mia": "勉強もしたいし将来的には仕事もするかも。\nWiFiのスピードはやくしてほしい", "Motoh": "全部。音は防音仕様（Goの仕事部屋みたいな感じ）にしたい。夏は蝉の音がうるさいから。座り心地が良い椅子。"}}, {"n": 19, "p": 2, "t": "誰を招きたいですか？　どのくらいの頻度で、何人くらい、何泊くらい？", "tag": "split", "note": "招く規模の想定が人によって大きく違う。Q27と一緒に決める。", "a": {"Sachi": "・家族（4人）居たいだけいてもらっていい\n・友達家族（4人）数日～1週間くらい？", "Issay": "友達の家族、年に一回、4人家族、三泊", "Mia": "友達、多くて５、６人とか？\n子供ができたら。", "Motoh": "友達、孫、親戚。"}}, {"n": 20, "p": 2, "t": "この土地・この場所でやりたいことは何ですか？", "tag": "agree", "note": "", "a": {"Sachi": "トレラン、登山、読書、料理、焚き火、ゴルフ、余裕ができればコミュニティ活動", "Issay": "畑、焚き火", "Mia": "読書、焚き火、BBQ", "Motoh": "焚き火、BBQ、スキー、ゴルフ、トレラン、イワナ釣り、温泉サウナ、ハーブ農園、日曜大工。"}}, {"n": 21, "p": 2, "t": "そのために必要な「道具の置き場所」はありますか？", "tag": "watch", "note": "Motohのみ具体的（チェーンソー・草刈り機・自転車・日曜大工の作業場）。玄関と収納の設計を決める。", "a": {"Sachi": "道具の置き場所は必要", "Issay": "道具箱、ゲストの車庫", "Mia": "駐車場", "Motoh": "薪は外に置けている。チェーンソー、草刈り機、自転車の置き場はない。日常大工作業場もない。"}}, {"n": 22, "p": 2, "t": "「別荘として使う時期」と「ここに住む時期」で、使い方はどう変わると思いますか？", "tag": "watch", "note": "Motoh「定住すると家で過ごすことが増える」／Sachi「あまり変わらない」。滞在時間の想定が違う。", "a": {"Sachi": "あまり変わらないと思う", "Issay": "永住すると家をもっと使いやすくする", "Mia": "わからない", "Motoh": "定住する場合は、家で過ごすことが増えると思う。"}}, {"n": 23, "p": 3, "t": "今の別荘と比べて、新しい家は「広い方がいい」「同じくらい」「小さくてもいい」のどれ？　理由も。", "tag": "split", "note": "全員「広く」だが、広くしたい場所が違う。Sachiは寝室は今のままでよいとしている。", "a": {"Sachi": "広くしたい：玄関、洗面所、トイレ、リビング、キッチン\n同じくらい：寝室", "Issay": "広い", "Mia": "広い方がいい　ー　たくさん人を呼びたいから", "Motoh": "もう少し広い方が良い。"}}, {"n": 24, "p": 3, "t": "部屋はいくつ必要だと思いますか？", "tag": "split", "note": "", "a": {"Sachi": "寝室（布団が4つ敷ける）\n寝室（家族用）\n仕事・勉強部屋\n\n他にあるといいもの：ランドリールーム、パントリー、キャビネット\nランドリールームは音が気になるので、寝る部屋やリビングからは遠い方がいい", "Issay": "6？", "Mia": "寝るところ４部屋くらい", "Motoh": "書斎・仕事部屋、ゲストルーム二つ、（和室？）、リンビングルーム"}}, {"n": 25, "p": 3, "t": "平屋がいい？　2階建てがいい？　こだわりはありますか？", "tag": "split", "note": "大人2人は平屋寄り、Issayは2階建て、Miaはどちらでも。敷地の広さと予算で決まる。", "a": {"Sachi": "平屋がいいがあまりこだわりはない", "Issay": "二階建て", "Mia": "どちらでも", "Motoh": "こだわりはないけど、平屋で行ければ平屋の方が良いかも。"}}, {"n": 26, "p": 3, "t": "「ここは絶対に広くしてほしい」場所は？　逆に「狭くても平気」な場所は？", "tag": "split", "note": "3人が「リビングを広く」。Issayだけ「リビング広すぎず」。", "a": {"Sachi": "絶対広く：キッチンとリビング\n狭くても平気：勉強・仕事部屋はそこまで大きくなくてもいいと思う。", "Issay": "リビング広すぎず", "Mia": "お風呂スペース、洗面台エリア広くしてほしい。\nリビング広くして欲しい", "Motoh": "リビングを広く、天井を高く。使える和室もしくはドライルームを作って欲しい。"}}, {"n": 27, "p": 3, "t": "何人まで泊まれるようにしたいですか？", "tag": "split", "note": "4人／8人／8人／10〜15人。面積と予算に最も効く数字。ここが決まらないと設計が進まない。", "a": {"Sachi": "4人くらい？", "Issay": "8", "Mia": "１０人ー１５人くらい", "Motoh": "８人。"}}, {"n": 28, "p": 4, "t": "新しい家で「絶対に欲しい」ものトップ3を、順位をつけて教えてください。", "tag": "split", "note": "1位が全員バラバラ。キッチン／自分の部屋／大きい風呂／2つ目のトイレ。予算配分の議題。", "a": {"Sachi": "1位：大きいキッチン（理由：料理をたくさんしたい）\n2位：断熱・換気機能（理由：冬を過ごしやすくするため、住んでいない時に、湿気がこもらないように）\n3位：トイレは２つ以上", "Issay": "1位：自分の部屋（理由：勉強、ゲーム、リラックス）\n2位：こたつ（理由：寒い時便利）\n3位：リビング（理由：ソファおっきいのがいい）", "Mia": "1位：大きいお風呂＆洗面台エリア（理由：密集して嫌だったから）\n2位：トイレ３、４つくらい（理由：渋滞する）\n3位：勉強部屋（理由：静かに集中したい時もあるから）", "Motoh": "1位：二つ目のトイレ（理由：足りない）\n2位：ガレージ（理由：収納等に便利、車が汚れない）\n3位：床暖房"}}, {"n": 29, "p": 4, "t": "逆に「絶対に嫌」「これだけは避けたい」ことトップ3は？", "tag": "watch", "note": "「掃除がしづらい」「虫」「低いキッチン」「隣家との距離」。避けたいことは一致度が高い。", "a": {"Sachi": "1位：掃除がしづらい（理由：自動で掃除ができる仕組みとかあるといいな）\n2位：木を切りすぎて、夏が暑い（理由：ほどほどに影もほしい）\n3位：人工物がリビングから見える（理由：森の中にいる感じがいい）", "Issay": "1位：低いキッチン（理由：腰が痛い）\n2位：臭い和室\n3位：ちっちゃいお風呂", "Mia": "1位：トイレ１つ（理由：渋滞する）\n2位：虫が多すぎる（理由：来たくなくなる）\n3位：広すぎて寒すぎること（理由：来たくなくなる）", "Motoh": "1位：隣の家との距離感（理由：ストレスになりそう）"}}, {"n": 30, "p": 4, "t": "「あったら嬉しいけど、なくても我慢できる」ものは？", "tag": "watch", "note": "薪ストーブは複数人が「あったら嬉しい」枠に入れている。必須ではない。", "a": {"Sachi": "・薪ストーブ\n・バルコニー\n・大きなお風呂", "Issay": "エアコン", "Mia": "露天風呂・サウナ、ホームシアターや大型オーディオ", "Motoh": "薪ストーブ（見た目がかっこいい）"}}, {"n": 31, "p": 4, "t": "もし予算が足りなくて何かを諦めるとしたら、何から諦められますか？", "tag": "agree", "note": "薪ストーブが最初に落ちる候補。SachiとMotohの答えが一致している。", "a": {"Sachi": "・薪ストーブ\n・大きなお風呂", "Issay": "こたつ", "Mia": "露天風呂・サウナ", "Motoh": "薪ストーブ"}}, {"n": 32, "p": 5, "t": "自分の部屋について、希望を自由に書いてください。", "tag": "split", "note": "Sachiは自分の部屋は不要、リビング重視。Issayは「自分の部屋」が1位。価値観の違い。", "a": {"Sachi": "寝室があれば、特に自分の部屋は不要。寝室に自分のものを片づけられる収納があればよい。\nその代わり、リビングを過ごしやすい場所にしてほしい。", "Issay": "防音、早いWiFi、日当たりいい", "Mia": "防音、コンセント多め、収納", "Motoh": "スタンディングデスク、モニター、ビデオ会議施設、明るさ・広さは特にこだわりなし。コンセントはたくさんあった方が良い。ヨガマット・ケトルベルで軽く運動できる感じにしたい。"}}, {"n": 33, "p": 5, "t": "新しい家で、どんなふうに過ごしている自分を想像しますか？", "tag": "watch", "note": "Motoh「ゲストや家族をもてなす、夜は静かに早く寝る」／Mia「のんびり、たまに勉強」。過ごし方の像が違う。", "a": {"Sachi": "料理、トレーニング、家族でゲームをしたりしてワイワイ", "Issay": "リラックス", "Mia": "料理とかしちゃったり？\nお風呂入ったり\nのんびりしてるけどたまには勉強", "Motoh": "自分で料理をして、ゲストや家族をもてなす。\n芝刈り。\n夜は静かに過ごして、早く寝る。"}}, {"n": 34, "p": 5, "t": "家族みんなで過ごす場所は、どんな空間だといいですか？", "tag": "agree", "note": "", "a": {"Sachi": "みんなでゲームをしたり、料理をみんなで作って食べたり。\n映画を一緒に見たりできるといい。", "Issay": "リビングでみんなと話す", "Mia": "それぞれ別のことをしながら同じ空間にいれる。\nでもみんなでカードゲームとかボードゲームとかしたい。", "Motoh": "それぞれ別のことをしながら同じ空間が良いと思う。"}}, {"n": 35, "p": 5, "t": "逆に「一人になれる場所」は必要ですか？　どんな場所がいい？", "tag": "split", "note": "Sachiはリビングに快適な場所があればよい。子どもたちは自室を明確に希望。", "a": {"Sachi": "リビングに快適なスペースがあればよい", "Issay": "自分の部屋で1人でゆっくり", "Mia": "必要。自分の部屋欲しい。", "Motoh": "必要。どこでもいい。"}}, {"n": 36, "p": 5, "t": "料理・食事について希望はありますか？", "tag": "split", "note": "Sachiはデッキでも。Motohは「外では食べないと思う」。Miaは「中で食べたい」。デッキの規模に直結。", "a": {"Sachi": "キッチンはアイランドキッチンがあるといい。冷蔵庫、パントリーもそれなりの大きさがいい。\n食事はダイニングテーブルで。希望があれば、掘りごたつがあってもいい。", "Issay": "外でも食べれるし中でも食べれる", "Mia": "中で食べたい。", "Motoh": "外では食べないと思う。キッチンは大きめのコンロと料理するスペースが欲しい。食卓の場所はどこでも良い。"}}, {"n": 37, "p": 5, "t": "お風呂・洗面・トイレについて、希望や今の不満はありますか？", "tag": "split", "note": "Miaは「大きいお風呂」が1位。Motohは「そんなに大きくなくてよい」。Sachiは諦められる枠。", "a": {"Sachi": "今の別荘はトイレが一つ。今の家はトイレが5つあり、快適。\nゲストも来ることを考えると2つ以上は欲しい気もする。\n\nお風呂は、温泉に行くことが多いので今まではあまり気にしなかったが、定住することになると、家でお風呂に入ることもあると思うので、それなりに快適だといい（追い炊き機能はほしい）\n\n冬にお風呂場が寒いので、暖かいことを望む。", "Issay": "お風呂狭い", "Mia": "トイレが一つなのは不便\nお風呂、洗面台エリアが小さい、狭い", "Motoh": "トイレは二つ欲しい。風呂はそんなに大きくなくても良い。洗面台にも特にこだわりなし。"}}, {"n": 38, "p": 5, "t": "外（庭・デッキ・駐車場）はどう使いたいですか？", "tag": "agree", "note": "Sachiはデッキでリビングとつなげてを希望。Motohは「庭は鑑賞する程度、ガレージは物置に」。外部空間の使い方が違う。", "a": {"Sachi": "駐車場は屋内だといいと思う。（花粉で車が黄色くなるので）\nデッキはもし作るなら、それなりのスペースがあって、夏はBBQとかできるといい。リビングとつながっているのもいいかも。", "Issay": "昼寝", "Mia": "BBQしたい\nみんな泊まれる駐車場欲しい。", "Motoh": "庭は鑑賞する程度。\n駐車場はガレージにして、物置にしたい。"}}, {"n": 39, "p": 6, "t": "好きだと思うスタイルを選んでください（いくつでも）。選んだ理由も書けると助かります。", "tag": "agree", "note": "4人全員がモダンを選択。ここは完全に一致している。", "a": {"Sachi": "選んだもの：モダン（すっきり・直線的・大きな窓） / 北欧（明るい木・白・シンプル）\nシンプルだけど、すっきりしている感じ。\n何年過ごしても劣化した感じにならないのがいい。", "Issay": "選んだもの：モダン（すっきり・直線的・大きな窓） / 古民家リノベ風（古材・黒い柱・味わい） / ミニマル（物が少ない・余白・静か）", "Mia": "選んだもの：モダン（すっきり・直線的・大きな窓） / 和モダン（畳や障子を現代的に） / 北欧（明るい木・白・シンプル） / リゾート／ホテルライク（非日常感）\n綺麗なとこがいい", "Motoh": "選んだもの：モダン（すっきり・直線的・大きな窓） / 和モダン（畳や障子を現代的に）\n和もだんで畳の部屋はあってもいいと思っていて。ゴロゴロしたりできるし、布団を敷けばゲストも泊まれるから便利かと。"}}, {"n": 40, "p": 6, "t": "逆に「これは苦手」「絶対に避けたい」スタイルはありますか？", "tag": "split", "note": "Issayは古民家リノベ風を「好き」に、他3人は「苦手」に入れた。唯一の明確な好みの対立。", "a": {"Sachi": "選んだもの：和風（古く感じる） / 古民家風（手入れが大変そう） / カントリー（かわいすぎる） / ボヘミアン（ごちゃつく）", "Issay": "選んだもの：カントリー（かわいすぎる） / リゾート風（生活感がない） / ボヘミアン（ごちゃつく）", "Mia": "選んだもの：古民家風（手入れが大変そう）\nわざわざ古い感出さなくていいと思う", "Motoh": "選んだもの：山小屋（暗い・重い） / 古民家風（手入れが大変そう） / カントリー（かわいすぎる） / ボヘミアン（ごちゃつく）"}}, {"n": 41, "p": 6, "t": "好きな素材を選んでください（いくつでも）。", "tag": "agree", "note": "", "a": {"Sachi": "選んだもの：無垢の木（節あり・自然な感じ） / 石（自然石・石張り） / 大きなガラス", "Issay": "選んだもの：石（自然石・石張り） / 鉄・黒い金物 / 大きなガラス", "Mia": "選んだもの：無垢の木（節あり・自然な感じ） / 無垢の木（節なし・上品） / 石（自然石・石張り） / タイル\n綺麗がいい", "Motoh": "選んだもの：白い壁（漆喰・塗り壁） / 石（自然石・石張り） / タイル / 大きなガラス / カーペット・布 / 畳"}}, {"n": 42, "p": 6, "t": "外観について。周りの木々の中で、この家はどう見えてほしいですか？", "tag": "watch", "note": "Motoh「花粉が目立たない外観」／Sachi「圧迫感がなく、屋根に雪が残らない」。外壁材と屋根形状に直結する実務的な要望。", "a": {"Sachi": "あまり圧迫感はないのがいい。家の中に入ると、ほっとして、心地よい気持ちになりたい。\n屋根は雪が残らないような設計がいいように思う。", "Issay": "別に特にない", "Mia": "なんでもいい", "Motoh": "そんなに馴染まなくても良いと思う。花粉が飛んできてもあまり目立たない感じが良いかな。"}}, {"n": 43, "p": 6, "t": "部屋の明るさ・暗さ、天井の高さについて好みはありますか？", "tag": "agree", "note": "天井は高く、が全員一致。Motohは「掃除しやすいのがいい」、Sachiは「高い窓の掃除ができない」を不満に挙げている。", "a": {"Sachi": "・明るくて開放的、天井は高いのがいい。\n・空気の循環がいいのがいい（湿気が気になるので）窓を開けると、風が部屋全体に通るイメージ。\n・寝る部屋は完全に真っ暗になるのがいい。（防音も希望）", "Issay": "天井高い", "Mia": "天井高いのがいい。", "Motoh": "天井高く。掃除はしやすいのがいい。\n部屋は明るくしたい。"}}, {"n": 44, "p": 6, "t": "今まで行った場所で「こんな家に住みたい」と思ったものはありますか？", "tag": "watch", "note": "Sachiはpinterestで共有する方針。Motohは原田マハさん宅とリストランテ・ダンロを挙げた。Miaはハワイの大きな家。具体例が出てきた。", "a": {"Sachi": "pinterestで共有していきたいと思う。", "Issay": "ゆうちゃんの作品がいっぱいあるとこ", "Mia": "ハワイの大きな家", "Motoh": "特になし。原田マハさん宅。\nリストランテ・ダンロの建築もいい。"}}, {"n": 45, "p": 7, "t": "将来この家に住むとしたら、楽しみなことは何ですか？", "tag": "agree", "note": "", "a": {"Sachi": "好きなことを好きな時に好きなだけする。\n体を動かした後に、リラックスする。\n家族や友達を招待して、ワイワイ過ごす。", "Issay": "涼しい", "Mia": "みんなでBBQ", "Motoh": "リラックスできる家"}}, {"n": 46, "p": 7, "t": "逆に、不安なこと・心配なことはありますか？", "tag": "watch", "note": "Sachi「運転できなくなった時」／Motoh「隣家の騒音とプライバシー」／Mia「掃除」／Issay「メンテ」。不安の中身が4人とも違う。", "a": {"Sachi": "生活に車が必須なので、運転ができなくなった時の生活についてはいずれ考える必要がある。", "Issay": "メンテが大変そう", "Mia": "掃除ちゃんとできるかな", "Motoh": "隣の家が今後どうなるか。（騒音とか）\nプライバシーが保たれるかどうか。"}}, {"n": 47, "p": 7, "t": "何年後、どんなタイミングで住み始めるのがいいと思いますか？", "tag": "split", "note": "Sachi 急がない／Motoh 本帰国時／Issay 日本に住むと思ったら／Mia 老後。時期の認識に開きがある。", "a": {"Sachi": "急いでいないので、丁寧にプランして家を作っていきたい。", "Issay": "もう日本に住むのでいいかなって思ったらかな", "Mia": "老後", "Motoh": "本帰国する際の居住地"}}, {"n": 48, "p": 7, "t": "その他、言っておきたいこと・思いついたことがあれば自由にどうぞ。", "tag": "", "note": "", "a": {"Sachi": "家族みんなの意見を聞きながら、家を作っていきたいと思います。", "Issay": "🥰頑張って", "Mia": "特になし。", "Motoh": "なし。"}}];
+const PARTS=[{"no": "PART 1", "ja": "今の別荘について", "en": "The house we have now", "nja": "18年分の実感が、いちばん強い手がかりになります。", "nen": "Eighteen years of living there is the strongest clue we have."}, {"no": "PART 2", "ja": "この土地・この場所について", "en": "The land and the setting", "nja": "建築家はまず敷地から設計を始めます。ここが最も役に立つ部分です。", "nen": "Architects design from the site first. This section matters most to them."}, {"no": "PART 3", "ja": "この家をどう使うか", "en": "What this place is for", "nja": "広さも間取りも、まず「何をする場所か」から決まります。", "nen": "Size and layout both start from what the place is actually for."}, {"no": "PART 4", "ja": "新しい家の大きさ", "en": "How big the house should be", "nja": "面積は予算に直結します。認識のズレを先に見つけておきます。", "nen": "Size drives cost. Better to surface disagreements early."}, {"no": "PART 5", "ja": "絶対に欲しいもの／優先順位", "en": "Must-haves and priorities", "nja": "順位をつけることで、設計の判断ができるようになります。", "nen": "Ranking is what lets the architect make decisions."}, {"no": "PART 6", "ja": "暮らし方", "en": "How we want to live", "nja": "間取りは「どう過ごすか」から決まります。", "nen": "Floor plans come from how you actually spend your days."}, {"no": "PART 7", "ja": "家の雰囲気・見た目", "en": "Look and feel", "nja": "言葉より、選んで比べる方が正確に伝わります。迷ったら複数選んでOK。", "nen": "Choosing beats describing. Pick as many as you like."}, {"no": "PART 8", "ja": "これからのこと", "en": "Looking ahead", "nja": "いつか住む家として、思うことを書いてください。", "nen": "Write what you think about eventually living here."}];
+const ORDER=["Sachi", "Issay", "Mia", "Motoh"];
+const META={"Sachi": {"label": "Sachi", "c": "--p1"}, "Issay": {"label": "Issay", "c": "--p2"}, "Mia": {"label": "Mia", "c": "--p3"}, "Motoh": {"label": "Motoh", "c": "--p4"}};
+const AG={"A": [["トイレを2つ以上つくる", "4人全員が挙げた項目。Motohは1位、Miaは避けたいこと1位、Sachiは3位。今の別荘で最も強い不満。", "Q2 / Q28 / Q29 / Q37"], ["断熱と暖房をやり直す", "寒さは全員の共通体験。到着時に布団が凍っている、廊下が常に寒い、風呂上がりが極寒。壁の中は後から触れないので最優先。", "Q3 / Q28"], ["虫が入りにくい家にする", "4人とも虫を挙げた。Miaは「来たくなくなる」とまで書いている。開口部と換気の設計で対応する話。", "Q2 / Q8 / Q29"], ["防音と高速ネット", "仕事・勉強・ゲーム・ビデオ会議。用途は違うが4人とも同じ要件を出している。", "Q18 / Q32"], ["天井を高く、モダン基調で", "天井の高さは全員一致。スタイルもQ39で4人全員がモダンを選択。素材は石と大きなガラスが共通。", "Q39 / Q41 / Q43"], ["キッチンカウンターを高くする", "Sachi・Issay・Motohが指摘。Issayは避けたいこと1位に「低いキッチン（腰が痛い）」。", "Q2 / Q29"], ["屋内の駐車場・ガレージ", "Motohは2位で「物置にしたい」、Sachiは花粉、Issayはゲスト用、Miaは台数。全員が屋内駐車に言及。", "Q21 / Q28 / Q38"], ["玄関まわりの収納を増やす", "Sachiは玄関を広く、Issayは左横のスペースを使いたい、Motohは収納が少なく汚れたまま入ってしまうと書いている。", "Q5 / Q23"], ["焚き火ができる場所", "Q20で4人全員が焚き火を挙げた。外部空間の設計の起点になる。", "Q20"], ["薪ストーブは必須ではない", "SachiもMotohも「あったら嬉しい」枠に入れ、予算が足りなければ最初に諦めると答えている。判断が一致している。", "Q30 / Q31"], ["掃除のしやすさを設計に入れる", "Sachiは避けたいこと1位、Motohは天井の希望に「掃除しやすいのがいい」、Miaは不安に「掃除ちゃんとできるかな」、Issayは「メンテが大変そう」。4人が別の言葉で同じことを言っている。", "Q29 / Q43 / Q46"]], "B": [["何人泊まれる家にするか", "Sachi 4人／Issay 8人／Motoh 8人／Mia 10〜15人。4倍の開きがある。面積と予算に最も効く数字で、これが決まらないと設計が始まらない。", "Q19 / Q23 / Q27"], ["個室をどこまで持つか", "Sachiは「自分の部屋は不要、リビングを快適に」。今の別荘の良さとして「個室がなくみんな同じ場所にいたこと」を挙げ、Motohも「家族団欒が良い思い出」と書いている。一方Issayは「自分の部屋」が1位、Miaも自室と勉強部屋を強く希望。家族像そのものの違い。", "Q6 / Q24 / Q32 / Q35"], ["お風呂にどれだけ投資するか", "Miaは「大きいお風呂と洗面台」が1位。Issayは「ちっちゃいお風呂」が避けたいこと3位。対してMotohは「そんなに大きくなくてよい」、Sachiは諦められる枠。子ども2人と大人2人で完全に分かれた。", "Q26 / Q28 / Q30 / Q37"], ["木をどれだけ切るか", "Motoh「全部切ってOK、今の家の木ももっと切りたい」／Sachi「切りすぎて夏が暑くなるのは避けたいこと2位」／Issay「好きな木がある」。着工前に決着が必要で、後戻りできない。", "Q9 / Q12 / Q29"], ["平屋か2階建てか", "Sachi・Motohは平屋寄り（将来の住みやすさ）、Issayは2階建て、Miaはどちらでも。敷地の使い方と将来の生活動線に関わる。", "Q25"], ["和室をつくるか", "Motohは畳の部屋を希望（ゴロゴロできる、布団でゲストが泊まれる）。Miaも和モダンを選択。一方Sachiは和風が苦手で、今の和室は物置と洗濯物置き場。Issayは「臭い和室」が避けたいこと2位、Motoh自身も「一階の和室はなくても困らなかった」と書いている。", "Q5 / Q24 / Q26 / Q39 / Q40"], ["いつ住み始めるか", "Sachi「急いでいない、丁寧に」／Motoh「本帰国する際」／Issay「もう日本に住むのでいいかなと思ったら」／Mia「老後」。時期の認識に開きがあり、断熱や設備をどこまで作り込むかの判断に関わる。", "Q16 / Q22 / Q47"], ["外をどう使うか", "Sachiはデッキをリビングとつなげて夏はBBQ。Motohは「庭は鑑賞する程度」「外では食べないと思う」。Miaは「中で食べたい」がBBQはしたい。デッキの規模と位置が変わる。", "Q20 / Q36 / Q38"], ["2棟の関係をどうするか", "Sachiは今の別荘をゲストハウスにして敷地内で行き来したい。Issayは「間になんか作りたい」。Motohは「繋げなくていいが小道みたいに」。方向性は近いが、今の別荘をどう使うかが未確定。", "Q13"], ["リビングの広さ", "3人が「リビングを広く」。Issayだけ「リビング広すぎず」。ただしMiaは避けたいこと3位に「広すぎて寒すぎること」を挙げており、広さと暖かさはトレードオフになる。", "Q26 / Q29"], ["スタイルの好みが1つだけ割れている", "Issayは古民家リノベ風を「好き」に入れたが、Sachi・Mia・Motohは同じものを「苦手」に入れた。他は全員モダンで一致しているので、ここだけ調整が必要。", "Q39 / Q40"]], "C": [["隣家との距離・音・プライバシー", "Motohは避けたいこと1位に「隣の家との距離感」、不安にも「隣の家が今後どうなるか（騒音）」「プライバシーが保たれるか」を挙げた。Q9でも生活音と犬の鳴き声を指摘。Motohにとって最大の懸念で、窓と外構の配置で対処する話。", "Q9 / Q11 / Q29 / Q46"], ["運転できなくなった時の生活", "Sachiのみ。車が必須の場所に定住することの長期リスク。平屋か2階建てか、どの機能を1階に置くかの判断材料になる。", "Q46"], ["到着した時に家が寒い", "Sachi「東京で暖房を入れても布団が凍っている」、Motoh「リモートで温めようとしてもストーブがつかない」。同じ問題を別の言葉で書いている。遠隔操作できる暖房が要る。", "Q3"], ["水抜きを自動・簡易にしたい", "Sachiのみ。冬の長期不在は避けられないので、遠隔で水抜き・監視できる仕組みは設備計画に入れておきたい。", "Q14"], ["高い窓の掃除ができない", "Sachiが今の不満に挙げ、Motohも「窓の掃除がしにくい」と書いている。全員が「大きな窓・高い天井」を望んでいるので、そのまま作ると同じ問題が起きる。掃除の方法まで設計に含める必要がある。", "Q2 / Q43"], ["不在中の換気と湿気", "Sachi「別荘に来ていない間に空気の入れ替えができない」、Motoh「和室が湿気ている、家に入るとカビ臭い」。断熱と同じくらい重要で、機械換気の計画に直結する。", "Q2 / Q28 / Q43"], ["鹿とマダニ", "Sachi「鹿の通り道でマダニが不安」、Motoh「鹿がよく通っている」「鹿が木の皮を食べていて倒木しそう」。外構と樹木の管理計画に関わる。", "Q9 / Q12"], ["道具と作業場がない", "Motohのみ具体的。チェーンソー、草刈り機、自転車、日曜大工の作業場。薪は外に置けているが他は行き場がない。ガレージを物置にしたいという希望とつながる。", "Q21 / Q38"], ["洗濯機の音", "Sachi「ランドリールームは寝る部屋やリビングから遠い方がいい」、Motoh「洗濯機・乾燥機がうるさい」。間取りの配置で解決できる。", "Q2 / Q24"], ["花粉", "Motoh「春は花粉が多い、黄色くなる」「花粉が飛んできても目立たない外観がいい」、Sachi「花粉で車が黄色くなるので駐車場は屋内」。外壁材と駐車計画に直結する。", "Q4 / Q38 / Q42"], ["人を呼びたい人と、静けさが好きな人", "Miaはこの家の目的が「遊ぶ、人とワイワイする」で10〜15人を泊めたい。一方SachiとMotohはこのエリアの良さに「静けさ」「周りに人がいないこと」を挙げ、Motohは「夜は静かに過ごして早く寝る」と書いている。同じ家で両立させる設計が要る。", "Q7 / Q15 / Q19 / Q27 / Q33"], ["具体的なイメージの手がかり", "Motohは原田マハさん宅とリストランテ・ダンロの建築を挙げた。Miaはハワイの大きな家、Issayは「ゆうちゃんの作品がいっぱいあるとこ」。Sachiはpinterestで共有する方針。建築家に渡す前に集めておきたい。", "Q44"]]};
+</script>
+<script>
+const SB="https://btkanorkhnxurfoihhcu.supabase.co/rest/v1";
+const KEY="sb_publishable_gN6XqglCT5z0J1fgFGgojQ_3AJ3mF7l";
+/* ▼ 合言葉をここに設定してください（家族に伝えるのはこの文字列） */
+const PASS="DaisukiYatsugatake";
+
+const $=id=>document.getElementById(id);
+let pass="", statuses={}, comments={};
+
+function hdr(extra){
+  return Object.assign({apikey:KEY,Authorization:"Bearer "+KEY,
+    "x-family-pass":pass,"Content-Type":"application/json"}, extra||{});
+}
+function toast(m){const t=$("toast");t.textContent=m;t.classList.add("on");
+  clearTimeout(t._t);t._t=setTimeout(()=>t.classList.remove("on"),2000);}
+function esc(s){return String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));}
+function hhmm(iso){const d=new Date(iso);
+  return `${d.getMonth()+1}/${d.getDate()} ${String(d.getHours()).padStart(2,"0")}:${String(d.getMinutes()).padStart(2,"0")}`;}
+
+/* ---------- render ---------- */
+function agenda(){
+  const put=(el,items,cls)=>{ $(el).innerHTML=items.map(([h,p,q])=>
+    `<div class="ag ${cls}"><h3>${esc(h)}</h3><p>${esc(p)}</p><span class="qref">${esc(q)}</span></div>`).join(""); };
+  put("agA",AG.A,"a"); put("agB",AG.B,""); put("agC",AG.C,"w");
+  $("nAgree").textContent=ROWS.filter(r=>r.tag==="agree").length+"問";
+  $("nSplit").textContent=ROWS.filter(r=>r.tag==="split").length+"問";
+  $("nWatch").textContent=ROWS.filter(r=>r.tag==="watch").length+"問";
+}
+
+const TAGJA={agree:"一致",split:"割れている",watch:"要確認"};
+
+function questions(){
+  let cur=-1, html="";
+  ROWS.forEach(r=>{
+    if(r.p!==cur){ cur=r.p;
+      html+=`<div class="sec" style="margin-top:38px"><div class="sec-head">
+        <span class="sec-no">${PARTS[cur].no}</span><h2>${esc(PARTS[cur].ja)}</h2></div></div>`; }
+    const cells=ORDER.map(k=>{
+      const v=r.a[k];
+      return `<div class="ans" style="--c:var(${META[k].c})"><div class="who">${META[k].label}</div>
+        <div class="body">${v?esc(v):'<span class="none">未記入</span>'}</div></div>`;}).join("");
+    html+=`<div class="qb ${r.tag?"t-"+r.tag:""}" data-n="${r.n}" data-tag="${r.tag}">
+      <div class="qb-top"><span class="qn">Q${r.n}</span><p class="qt">${esc(r.t)}</p>
+      ${r.tag?`<span class="tag ${r.tag}">${TAGJA[r.tag]}</span>`:""}</div>
+      ${r.note?`<div class="qnote">${esc(r.note)}</div>`:""}
+      <div class="grid">${cells}</div>
+      <div class="cmt">
+        <div class="cmt-list" id="cl${r.n}"></div>
+        <div class="cmt-form">
+          <input type="text" id="ci${r.n}" placeholder="この項目について書く">
+          <button data-post="${r.n}">送る</button>
+        </div>
+        <div class="stat"><span>結論</span>
+          ${["決定","保留","要相談"].map(s=>`<button class="sb" data-q="${r.n}" data-s="${s}">${s}</button>`).join("")}
+        </div>
+      </div></div>`;
+  });
+  $("qs").innerHTML=html;
+
+  $("qs").addEventListener("click",e=>{
+    const p=e.target.closest("[data-post]"); if(p){ postComment(+p.dataset.post); return; }
+    const s=e.target.closest(".sb"); if(s){ setStatus(+s.dataset.q, s.dataset.s); }
+  });
+  $("qs").addEventListener("keydown",e=>{
+    if(e.key==="Enter" && e.target.id && e.target.id.startsWith("ci")) postComment(+e.target.id.slice(2));
+  });
+}
+
+function drawComments(n){
+  const list=comments[n]||[];
+  $("cl"+n).innerHTML=list.map(c=>{
+    const col=META[c.author]?`var(${META[c.author].c})`:"var(--ink-2)";
+    return `<div class="cmt-item" style="border-left-color:${col}">
+      <b style="color:${col}">${esc(c.author)}</b>${esc(c.body)}
+      <time>${hhmm(c.created_at)}</time></div>`;}).join("");
+}
+function drawStatus(n){
+  document.querySelectorAll(`.sb[data-q="${n}"]`).forEach(b=>
+    b.classList.toggle("on", statuses[n]===b.dataset.s));
+}
+
+/* ---------- data ---------- */
+async function loadAll(){
+  const [c,s]=await Promise.all([
+    fetch(`${SB}/survey_comments?select=*&order=created_at.asc`,{headers:hdr()}),
+    fetch(`${SB}/survey_status?select=*`,{headers:hdr()})
+  ]);
+  if(!c.ok||!s.ok) throw new Error("read failed");
+  comments={}; (await c.json()).forEach(x=>{(comments[x.question_id]=comments[x.question_id]||[]).push(x);});
+  statuses={}; (await s.json()).forEach(x=>statuses[x.question_id]=x.status);
+  ROWS.forEach(r=>{drawComments(r.n);drawStatus(r.n);});
+  applyFilter();
+}
+
+async function postComment(n){
+  const who=$("me").value;
+  if(!who){ toast("上で名前を選んでください"); $("me").focus(); return; }
+  const box=$("ci"+n), body=box.value.trim();
+  if(!body) return;
+  const btn=document.querySelector(`[data-post="${n}"]`); btn.disabled=true;
+  try{
+    const r=await fetch(`${SB}/survey_comments`,{method:"POST",
+      headers:hdr({Prefer:"return=representation"}),
+      body:JSON.stringify({question_id:String(n),author:who,body:body,passcode:pass})});
+    if(!r.ok) throw new Error();
+    const rows=await r.json();
+    (comments[n]=comments[n]||[]).push(rows[0]||{author:who,body:body,created_at:new Date().toISOString()});
+    box.value=""; drawComments(n);
+  }catch(e){ toast("送れませんでした。通信を確認してください"); }
+  btn.disabled=false;
+}
+
+async function setStatus(n,s){
+  const next = statuses[n]===s ? null : s;
+  statuses[n]=next; drawStatus(n); applyFilter();
+  try{
+    await fetch(`${SB}/survey_status`,{method:"POST",
+      headers:hdr({Prefer:"resolution=merge-duplicates"}),
+      body:JSON.stringify({question_id:String(n),status:next,passcode:pass,updated_at:new Date().toISOString()})});
+  }catch(e){ toast("保存できませんでした"); }
+}
+
+/* ---------- filter ---------- */
+let filt="all";
+function applyFilter(){
+  document.querySelectorAll(".qb").forEach(el=>{
+    const n=+el.dataset.n, tag=el.dataset.tag;
+    let show=true;
+    if(filt==="open") show = statuses[n]!=="決定";
+    else if(filt!=="all") show = tag===filt;
+    el.classList.toggle("hide",!show);
+  });
+}
+document.querySelectorAll(".filt").forEach(b=>b.onclick=()=>{
+  document.querySelectorAll(".filt").forEach(x=>x.classList.remove("on"));
+  b.classList.add("on"); filt=b.dataset.f; applyFilter();
+});
+
+/* ---------- export ---------- */
+$("exp").onclick=()=>{
+  const L=["山の家 — 話し合いの記録","書き出し："+new Date().toLocaleString("ja-JP"),""];
+  ROWS.forEach(r=>{
+    const cs=comments[r.n]||[], st=statuses[r.n];
+    if(!cs.length && !st) return;
+    L.push(`Q${r.n}. ${r.t}`);
+    if(st) L.push(`  【${st}】`);
+    cs.forEach(c=>L.push(`  ${c.author}：${c.body}`));
+    L.push("");
+  });
+  if(L.length<=3) L.push("（まだコメントがありません）");
+  const blob=new Blob(["\uFEFF"+L.join("\n")],{type:"text/plain;charset=utf-8"});
+  const a=document.createElement("a");
+  a.href=URL.createObjectURL(blob); a.download="yamanoie_discussion.txt"; a.click();
+  setTimeout(()=>URL.revokeObjectURL(a.href),1000);
+  toast("書き出しました");
+};
+$("pr").onclick=()=>window.print();
+
+/* ---------- gate ---------- */
+async function enter(){
+  const v=$("pass").value.trim();
+  if(!v){ $("gerr").textContent="合言葉を入れてください"; return; }
+  if(v!==PASS){ $("gerr").textContent="合言葉が違います"; return; }
+  pass=v; $("gerr").textContent="読み込み中…";
+  try{
+    agenda(); questions(); await loadAll();
+    $("gate").style.display="none"; $("bar").style.display="block"; $("wrap").classList.add("on");
+    try{ sessionStorage.setItem("yn-pass",v); const m=localStorage.getItem("yn-me"); if(m) $("me").value=m; }catch(e){}
+  }catch(e){ $("gerr").textContent="つながりませんでした。合言葉と通信を確認してください"; }
+}
+$("enter").onclick=enter;
+$("pass").addEventListener("keydown",e=>{if(e.key==="Enter")enter();});
+$("me").addEventListener("change",()=>{try{localStorage.setItem("yn-me",$("me").value);}catch(e){}});
+
+try{ const p=sessionStorage.getItem("yn-pass"); if(p){ $("pass").value=p; enter(); } }catch(e){}
+setInterval(()=>{ if(pass) loadAll().catch(()=>{}); }, 20000);
+</script>
+</body>
+</html>
